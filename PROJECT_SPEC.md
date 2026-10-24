@@ -24,6 +24,8 @@ The MCP server acts as the game's biophysical calculation engine, evidence libra
 
 The MCP Server has already been implemented as a separate module acessable through the TurnGreen MCP server.
 
+The MCP congfiguration has upadted to reflect this.
+
 The tools made available by this MCP server appear below:
 
 1. **Turn Simulation Tool (`simulate_policy_turn`)**:
