@@ -30,6 +30,8 @@ Keep game rules and session history separate from React rendering. The backend v
 
 **Step 7 implemented (October 24, 2026):** Added saved author/district/group details, real-history resolution generation, metric validation, a controlled plain-language action plan, source links, and Print / Save as PDF styling. Build and 27 tests pass; the real generator and browser document were checked. Native print access is blocked, so final PDF page-count verification remains open. See [CIVIC_RESOLUTION.md](CIVIC_RESOLUTION.md).
 
+**Step 8 executed (October 24, 2026):** Completed both village journeys in desktop/mobile browser checks, 15 live service turns, recovery/retry and keyboard checks, 27 automated tests, and asset/HTTP checks. Fixed small tap targets, stale project selection, off-screen errors, table spacing and long-name wrapping; added production compression and caching. Print CSS fits the Letter page area, but native saved-PDF page count remains unverified. See [PLAYTEST_OPTIMIZATION.md](PLAYTEST_OPTIMIZATION.md).
+
 | Step | Work | Completion check |
 | :--- | :--- | :--- |
 | **1. Validate the existing tools** | Exercise simulation, science, assessment, and resolution generation with a sample session. Capture actual response shapes and errors. | All four tools return usable structured results. |
@@ -39,7 +41,7 @@ Keep game rules and session history separate from React rendering. The backend v
 | **5. Add explanations and feedback — complete** | Translate technical outputs into plain language. Add the science drawer, citations, and lightweight parcel transitions. | Each displayed environmental change has a traceable explanation. |
 | **6. Add assessments and recovery — complete** | Record identical pre/post questions. Save session state locally and restore it on refresh. | Assessment results and game progress survive refreshes and recoverable failures. |
 | **7. Generate the civic resolution — implemented; print QA pending** | Pass actual session history to the resolution tool. Add author/district fields, a controlled resolution template, validated metric overrides, and single-page print styling. | The completed game produces a readable one-page resolution through Print / Save as PDF. |
-| **8. Playtest and optimize** | Verify both neighborhoods, mobile touch, keyboard navigation, error recovery, performance, and print layout. | Both complete journeys work on desktop and a narrow mobile screen. |
+| **8. Playtest and optimize — executed; native PDF check open** | Verify both neighborhoods, mobile touch, keyboard navigation, error recovery, performance, and print layout. | Both complete journeys work on desktop and a narrow mobile screen. |
 
 ## Reconciled Specification (Step 2 Complete)
 

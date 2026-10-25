@@ -1,0 +1,149 @@
+{
+  "captured_at": "2026-10-25T06:31:57.659Z",
+  "results": [
+    {
+      "profile": "crowded_market",
+      "years": 5,
+      "spent_coins": 335,
+      "restored": true,
+      "resolution": {
+        "details": {
+          "author_name": "Release tester",
+          "district_name": "Dryland Farming Village",
+          "organization_or_school": "Village learning group"
+        },
+        "created_at": "2026-10-25T06:31:56.573Z",
+        "metrics": {
+          "total_budget_spent": 3350,
+          "remaining_budget": 1650,
+          "total_modeled_retention_m3": 17472.3,
+          "baseline_runoff_reduction_m3": -1365.0000000000002,
+          "net_built_up_reduced_ha": 0.14000000000000057,
+          "ground_depaved_ha": 0.14000000000000057,
+          "total_ground_interventions_ha": 0.18,
+          "rooftop_treated_ha": 0.1,
+          "community_cheer_score": 78
+        },
+        "years": [
+          {
+            "year": 1,
+            "policy": "urban_canopy_trees",
+            "coins": 100,
+            "cooling": 0
+          },
+          {
+            "year": 2,
+            "policy": "bioswales",
+            "coins": 90,
+            "cooling": 0.010000000000000009
+          },
+          {
+            "year": 3,
+            "policy": "cool_roofs",
+            "coins": 90,
+            "cooling": 0
+          },
+          {
+            "year": 4,
+            "policy": "bioswales",
+            "coins": 30,
+            "cooling": 0
+          },
+          {
+            "year": 5,
+            "policy": "urban_canopy_trees",
+            "coins": 25,
+            "cooling": 0
+          }
+        ],
+        "rating_change": 0
+      }
+    },
+    {
+      "profile": "riverside_valley",
+      "years": 5,
+      "spent_coins": 335,
+      "restored": true,
+      "resolution": {
+        "details": {
+          "author_name": "Release tester",
+          "district_name": "Riverbank Village",
+          "organization_or_school": "Village learning group"
+        },
+        "created_at": "2026-10-25T06:31:57.235Z",
+        "metrics": {
+          "total_budget_spent": 3350,
+          "remaining_budget": 1650,
+          "total_modeled_retention_m3": 16794.5,
+          "baseline_runoff_reduction_m3": -1435.0000000000005,
+          "net_built_up_reduced_ha": 0.14499999999999957,
+          "ground_depaved_ha": 0.14499999999999957,
+          "total_ground_interventions_ha": 0.18,
+          "rooftop_treated_ha": 0.1,
+          "community_cheer_score": 77
+        },
+        "years": [
+          {
+            "year": 1,
+            "policy": "urban_canopy_trees",
+            "coins": 100,
+            "cooling": 0
+          },
+          {
+            "year": 2,
+            "policy": "bioswales",
+            "coins": 90,
+            "cooling": 0
+          },
+          {
+            "year": 3,
+            "policy": "cool_roofs",
+            "coins": 90,
+            "cooling": 0
+          },
+          {
+            "year": 4,
+            "policy": "bioswales",
+            "coins": 30,
+            "cooling": 0
+          },
+          {
+            "year": 5,
+            "policy": "urban_canopy_trees",
+            "coins": 25,
+            "cooling": 0
+          }
+        ],
+        "rating_change": 0
+      }
+    },
+    {
+      "profile": "roof-only edge case",
+      "metrics": {
+        "total_budget_spent": 750,
+        "remaining_budget": 4250,
+        "total_modeled_retention_m3": 17248.4,
+        "baseline_runoff_reduction_m3": -1585,
+        "net_built_up_reduced_ha": 0,
+        "ground_depaved_ha": 0,
+        "total_ground_interventions_ha": 0,
+        "rooftop_treated_ha": 0.1,
+        "community_cheer_score": 77
+      }
+    }
+  ],
+  "assets": [
+    {
+      "file": "index-BZw1abQn.js",
+      "bytes": 260682,
+      "gzip_bytes": 81975
+    },
+    {
+      "file": "index-DtHWOYaf.css",
+      "bytes": 26195,
+      "gzip_bytes": 6897
+    }
+  ],
+  "compressed_bytes": 88872,
+  "network": "Local loopback; no throttled load-time claim"
+}

@@ -1,0 +1,11 @@
+import assert from 'node:assert/strict';
+import {readFileSync,writeFileSync} from 'node:fs';
+const base=process.env.GAME_QA_URL??'http://127.0.0.1:5174';
+const html=readFileSync('dist/index.html','utf8');const js=html.match(/src="([^"]+\.js)"/)![1];
+const compressed=await fetch(base+js,{headers:{'Accept-Encoding':'gzip'}});assert.equal(compressed.status,200);assert.equal(compressed.headers.get('content-encoding'),'gzip');assert.match(compressed.headers.get('cache-control')??'',/immutable/);const text=await compressed.text();assert.ok(text.length>0);const etag=compressed.headers.get('etag')!;
+const cached=await fetch(base+js,{headers:{'Accept-Encoding':'gzip','If-None-Match':etag}});assert.equal(cached.status,304);
+const plain=await fetch(base+js,{headers:{'Accept-Encoding':'identity'}});assert.equal(plain.headers.get('content-encoding'),null);assert.equal(await plain.text(),text);
+const index=await fetch(base+'/');assert.equal(index.headers.get('cache-control'),'no-cache');const health=await fetch(base+'/api/health');assert.equal(health.headers.get('cache-control'),'no-store');
+const invalid=await fetch(base+'/api/sessions',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({profile_id:'invalid'})});assert.equal(invalid.status,400);
+const crossOrigin=await fetch(base+'/api/sessions',{method:'POST',headers:{'Content-Type':'application/json',Origin:'https://example.com'},body:JSON.stringify({profile_id:'crowded_market'})});assert.equal(crossOrigin.status,403);
+const result={asset:js,compressed_bytes:Number(compressed.headers.get('content-length')),raw_bytes:Number(plain.headers.get('content-length')),cache_revalidation:cached.status,html_cache:index.headers.get('cache-control'),api_cache:health.headers.get('cache-control'),invalid_profile:invalid.status,cross_origin:crossOrigin.status};writeFileSync('validation/release-serving.json',JSON.stringify(result,null,2));console.log('PASS: production gzip, identity, ETag/304, fresh HTML, uncached API, invalid-profile and origin guards.',result);

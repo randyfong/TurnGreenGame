@@ -1,3 +1,5 @@
+import {gzipSync} from 'node:zlib';
+import {createHash} from 'node:crypto';
 import { createServer } from 'node:http';
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
@@ -16,7 +18,11 @@ const server=createServer(async(req,res)=>{
   if(!url.pathname.startsWith('/api/')) {
     if(vite)return vite.middlewares(req,res);
     try { const pathname=decodeURIComponent(url.pathname);const file=path.resolve(root,'dist','.'+pathname);const base=path.join(root,'dist');if(!file.startsWith(base+path.sep)&&file!==base)throw Error();
-      let target=file;try{if(!path.extname(target))target=path.join(base,'index.html');const data=await readFile(target);const ext=path.extname(target);res.setHeader('Content-Type',({'.html':'text/html','.js':'text/javascript','.css':'text/css','.svg':'image/svg+xml'} as Record<string,string>)[ext]??'application/octet-stream');res.end(data);}catch{res.writeHead(404);res.end('Not found');}
+      let target=file;try{if(!path.extname(target))target=path.join(base,'index.html');const data=await readFile(target);const ext=path.extname(target);res.setHeader('Content-Type',({'.html':'text/html','.js':'text/javascript','.css':'text/css','.svg':'image/svg+xml'} as Record<string,string>)[ext]??'application/octet-stream');
+      const compress=/\bgzip\b/.test(req.headers['accept-encoding']??'')&&['.html','.js','.css','.svg'].includes(ext)&&data.length>512;
+      const payload=compress?gzipSync(data):data;const etag='"'+createHash('sha256').update(payload).digest('hex').slice(0,24)+'"';
+      res.setHeader('Vary','Accept-Encoding');res.setHeader('ETag',etag);res.setHeader('Cache-Control',ext==='.html'?'no-cache':/\/assets\/[^/]+-[A-Za-z0-9_-]+\.(js|css)$/.test(target)?'public, max-age=31536000, immutable':'no-cache');
+      if(req.headers['if-none-match']===etag){res.writeHead(304);res.end();}else{if(compress)res.setHeader('Content-Encoding','gzip');res.setHeader('Content-Length',payload.length);res.end(payload);}}catch{res.writeHead(404);res.end('Not found');}
     }catch{res.writeHead(400);res.end('Invalid path');}return;
   }
   res.setHeader('Content-Type','application/json');res.setHeader('Cache-Control','no-store');
@@ -37,5 +43,5 @@ const server=createServer(async(req,res)=>{
     res.end(JSON.stringify(out));
   }catch(error){const status=error instanceof RequestError?error.status:502;res.writeHead(status);res.end(JSON.stringify({error:error instanceof Error?error.message:'The server request failed.'}));}
 });
-const port=Number(process.env.PORT??5173);server.listen(port,'127.0.0.1',()=>console.log(`CoolTown: http://127.0.0.1:${port}`));
+const port=Number(process.env.PORT??5173);server.listen(port,'127.0.0.1',()=>console.log(`CoolVillage: http://127.0.0.1:${port}`));
 for(const signal of ['SIGINT','SIGTERM'] as const)process.on(signal,async()=>{server.close();await vite?.close();await gateway.close();process.exit(0);});

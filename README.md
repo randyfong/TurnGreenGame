@@ -82,3 +82,7 @@ Live recovery check: `node --import tsx scripts/validate-recovery.ts`.
 ## Village action plan
 
 After five years, save the final reflection answers, then enter a name or nickname and village/district to create a civic resolution. Use **Print / Save as PDF** to print only the action plan. Optional school/group details are omitted when blank. The plan is stored with the session. See [resolution notes and print verification limits](Docs/CIVIC_RESOLUTION.md).
+
+## Release playtest checks
+
+Run `npm run build`, `npm test`, and `node --import tsx scripts/validate-release.ts`. The latter exercises both real village profiles, restart recovery, retries, final assessments, and action plans. With a production server on port 5174, run `node --import tsx scripts/validate-serving.ts` to verify compression and caching (`GAME_QA_URL` overrides the URL). See [playtest results and remaining print check](Docs/PLAYTEST_OPTIMIZATION.md).
