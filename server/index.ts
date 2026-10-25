@@ -3,11 +3,12 @@ import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { rules } from '../shared/types';
+import {FileSessions} from './persistence';
 import { MCPGateway } from './mcp';
 import {ScienceService} from './science';
 import { RequestError, SessionStore } from './sessions';
-const gateway=new MCPGateway();const store=new SessionStore(gateway);const science=new ScienceService(gateway);
 const root=fileURLToPath(new URL('../',import.meta.url));
+const gateway=new MCPGateway();const store=new SessionStore(gateway,new FileSessions(process.env.COOLVILLAGE_SAVE_DIR??path.join(root,'data','sessions')));const science=new ScienceService(gateway);
 const production=process.env.NODE_ENV==='production';
 const vite=production?null:await (await import('vite')).createServer({root,server:{middlewareMode:true,watch:{usePolling:true,interval:300}},appType:'spa'});
 const server=createServer(async(req,res)=>{
@@ -22,13 +23,14 @@ const server=createServer(async(req,res)=>{
   try {
     if(req.method==='POST') {const origin=req.headers.origin;if(origin&&origin!==`http://${req.headers.host}`)throw new RequestError('Origin not allowed.',403);}
     let body:any={};if(req.method==='POST'){let raw='';for await(const chunk of req){raw+=chunk;if(raw.length>16384)throw new RequestError('Request too large.',413);}try{body=JSON.parse(raw);}catch{throw new RequestError('Invalid JSON.');}if(!body||typeof body!=='object'||Array.isArray(body))throw new RequestError('Invalid request body.');}
-    let out:unknown; const m=url.pathname.match(/^\/api\/sessions\/([a-f0-9-]+)(?:\/(baseline|turn))?$/);
+    let out:unknown; const m=url.pathname.match(/^\/api\/sessions\/([a-f0-9-]+)(?:\/(baseline|turn|post))?$/);
     if(req.method==='GET'&&url.pathname==='/api/config')out=rules;
     else if(req.method==='GET'&&url.pathname==='/api/science')out=await science.get(url.searchParams.get('topic')??'');
-    else if(req.method==='GET'&&url.pathname==='/api/health')out={status:'ok',simulation:'connects on first request',persistence:'memory only'};
+    else if(req.method==='GET'&&url.pathname==='/api/health')out={status:'ok',simulation:'connects on first request',persistence:'local versioned files'};
     else if(req.method==='POST'&&url.pathname==='/api/sessions')out=store.create(body.profile_id);
     else if(m&&req.method==='GET'&&!m[2])out=store.get(m[1]);
     else if(m&&req.method==='POST'&&m[2]==='baseline')out=await store.baseline(m[1],body);
+    else if(m&&req.method==='POST'&&m[2]==='post')out=await store.post(m[1],body);
     else if(m&&req.method==='POST'&&m[2]==='turn')out=await store.turn(m[1],body);
     else throw new RequestError('Route not found.',404);
     res.end(JSON.stringify(out));

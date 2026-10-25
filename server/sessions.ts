@@ -1,16 +1,17 @@
 import {applyDrySeason,livingCover,noProjectCover} from '../shared/dryland';
 import { randomUUID } from 'node:crypto';
-import { rules, type Assessment, type Session, type Simulation, type ToolGateway, type TurnInput } from '../shared/types';
+import { rules, type AssessmentResult, type Assessment, type Session, type Simulation, type ToolGateway, type TurnInput } from '../shared/types';
 export class RequestError extends Error { constructor(message:string, public status=400) { super(message); } }
 export class SessionStore {
   private sessions = new Map<string,Session>();
   private locks = new Set<string>();
-  constructor(private gateway:ToolGateway) {}
-  get(id:string):Session { const s=this.sessions.get(id); if(!s)throw new RequestError('Session not found. Start a new neighborhood.',404); return structuredClone(s); }
+  constructor(private gateway:ToolGateway, private persistence?:{load(id:string):Session|undefined;save(session:Session):void}) {}
+  private commit(s:Session){this.persistence?.save(s);this.sessions.set(s.id,structuredClone(s));}
+  get(id:string):Session { const s=this.sessions.get(id)??this.persistence?.load(id); if(!s)throw new RequestError('Session not found. Start a new neighborhood.',404); return structuredClone(s); }
   create(profileId:string) {
     const p=rules.profiles.find(p=>p.id===profileId); if(!p)throw new RequestError('Choose a listed neighborhood.');
     const s:Session={id:randomUUID(),profile_id:p.id,scenario_version:'dryland-v1',phase:'baseline',year:1,engine:{land_cover:structuredClone(p.land_cover),baseline_land_cover:structuredClone(p.land_cover),remaining_budget:rules.budget.total_coins*rules.budget.usd_per_coin,total_area_hectares:p.total_area_hectares},history:[]};
-    this.sessions.set(s.id,s); return structuredClone(s);
+    this.commit(s); return structuredClone(s);
   }
   private async locked<T>(id:string, work:()=>Promise<T>) { if(this.locks.has(id))throw new RequestError('A request is already running. Retry when it finishes.',409);this.locks.add(id);try{return await work();}finally{this.locks.delete(id);} }
   async baseline(id:string, answers:Assessment) { return this.locked(id,async()=>{
@@ -19,8 +20,19 @@ export class SessionStore {
     if(s.baseline){if(JSON.stringify(s.baseline)===JSON.stringify(answers))return s;throw new RequestError('Baseline already recorded.',409);}
     if(s.phase!=='baseline')throw new RequestError('Baseline cannot be changed.',409);
     await this.gateway.call('assessment','record_assessment_score',{session_id:id,turn:0,responses:answers});
-    s.baseline=answers;s.phase='planning';this.sessions.set(id,s);return structuredClone(s);
+    s.baseline=answers;s.phase='planning';this.commit(s);return structuredClone(s);
   }); }
+  async post(id:string, answers:Assessment) {return this.locked(id,async()=>{
+    const s=this.get(id);
+    if(!answers||[answers.q1_canopy_flooding,answers.q2_pavement_heat].some(v=>!Number.isInteger(v)||v<1||v>5))throw new RequestError('Answer both questions with a rating from 1 to 5.');
+    if(s.post_assessment){if(s.post_assessment.q1_canopy_flooding===answers.q1_canopy_flooding&&s.post_assessment.q2_pavement_heat===answers.q2_pavement_heat)return s;throw new RequestError('Final ratings already recorded.',409);}
+    if(s.phase!=='complete'||s.history.length!==rules.years)throw new RequestError('Finish all five years before the final ratings.',409);
+    if(!s.baseline)throw new RequestError('Your baseline ratings are missing. Your game is saved; restore the original save before retrying.',409);
+    const result=await this.gateway.call('assessment','record_assessment_score',{session_id:id,turn:5,responses:answers,prior_assessment:s.baseline}) as AssessmentResult;
+    const g=result?.learning_gain;
+    if(result?.status!=='completed'||result.turn!==5||result.session_id!==id||!g||!Number.isFinite(g.average_normalized_gain)||!['standard','ceiling_effect'].includes(g.gain_type)||!Array.isArray(g.question_breakdown)||g.question_breakdown.length!==2||rules.assessment.questions.some(q=>{const b=g.question_breakdown.find(b=>b.question_id===q.id);return !b||b.pre_score!==s.baseline![q.id as keyof Assessment]||b.post_score!==answers[q.id as keyof Assessment]||b.raw_delta!==b.post_score-b.pre_score||!Number.isFinite(b.normalized_gain);}))throw new RequestError('The ratings service returned inconsistent results. Your answers were not committed; try again.',502);
+    s.post_assessment=answers;s.assessment_result=result;this.commit(s);return structuredClone(s);
+  });}
   async turn(id:string, input:TurnInput) { return this.locked(id,async()=>{
     const s=this.get(id);
     if(!input || typeof input.request_id!=='string'||input.request_id.length<1||input.request_id.length>100)throw new RequestError('A request identifier is required.');
@@ -37,7 +49,7 @@ export class SessionStore {
     if(dry){dry.impact.after_project_vegetation_pct=livingCover(result.next_state.land_cover);dry.impact.no_project_vegetation_pct=livingCover(noProjectCover(s.engine.baseline_land_cover as typeof s.engine.land_cover,s.engine.total_area_hectares,s.year));}
     s.history.push({dry_season:dry?.impact,year:s.year,request_id:input.request_id,policy:input.policy,quantity:input.quantity,spend_coins:spend,unused_allowance:100-spend,result});
     s.engine=result.next_state; if(s.year===rules.years)s.phase='complete';else s.year++;
-    this.sessions.set(id,s);return structuredClone(s);
+    this.commit(s);return structuredClone(s);
   }); }
 }
 export function validateSimulation(r:Simulation,s:Session,usd:number,policy:string) {

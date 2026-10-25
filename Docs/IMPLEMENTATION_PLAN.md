@@ -26,6 +26,8 @@ Keep game rules and session history separate from React rendering. The backend v
 
 **Step 5 complete (October 24, 2026):** Added the science drawer, eight plain-language topics, year-specific recorded evidence, MCP references and citations, graceful fallback/retry, annual narrative feedback, and reduced-motion-aware map updates. Build, 22 tests, live science checks, and browser desktop/mobile/failure checks pass. See [EXPLANATIONS_FEEDBACK.md](EXPLANATIONS_FEEDBACK.md).
 
+**Step 6 complete (October 24, 2026):** Identical before/after ratings, validated assessment results, durable local session snapshots, browser drafts, reconnect controls, and idempotent recovery are implemented. Build, 25 automated tests, real-service restart recovery, and a full browser journey pass. See [ASSESSMENTS_RECOVERY.md](ASSESSMENTS_RECOVERY.md).
+
 | Step | Work | Completion check |
 | :--- | :--- | :--- |
 | **1. Validate the existing tools** | Exercise simulation, science, assessment, and resolution generation with a sample session. Capture actual response shapes and errors. | All four tools return usable structured results. |
@@ -33,7 +35,7 @@ Keep game rules and session history separate from React rendering. The backend v
 | **3. Build the application foundation** | Scaffold the SPA and backend bridge. Define typed session state, tool adapters, and two pre-baked neighborhood profiles. | Browser can load a neighborhood and request a simulation. |
 | **4. Implement the planning loop — complete** | Build the 4×4 grid, intervention palette, budget display, five-year progression, and annual result summaries. | A player can complete five turns without overspending or submitting twice. |
 | **5. Add explanations and feedback — complete** | Translate technical outputs into plain language. Add the science drawer, citations, and lightweight parcel transitions. | Each displayed environmental change has a traceable explanation. |
-| **6. Add assessments and recovery** | Record identical pre/post questions. Save session state locally and restore it on refresh. | Assessment results and game progress survive refreshes and recoverable failures. |
+| **6. Add assessments and recovery — complete** | Record identical pre/post questions. Save session state locally and restore it on refresh. | Assessment results and game progress survive refreshes and recoverable failures. |
 | **7. Generate the civic resolution** | Pass actual session history to the resolution tool. Add author/district fields, a controlled resolution template, validated metric overrides, and single-page print styling. | The completed game produces a readable one-page resolution through Print / Save as PDF. |
 | **8. Playtest and optimize** | Verify both neighborhoods, mobile touch, keyboard navigation, error recovery, performance, and print layout. | Both complete journeys work on desktop and a narrow mobile screen. |
 
