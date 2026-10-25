@@ -16,3 +16,5 @@
 .civic-resolution,.resolution-controls{overflow-wrap:anywhere}
 .error:focus{outline:3px solid #b46b25;outline-offset:3px}
 @media screen and (max-width:780px){.weather-switch button{width:44px;height:44px}.quantity-row button,.quantity-row input{min-width:44px;height:44px}.why-link,.policy-science,.town-stats .why-link{min-height:44px;display:inline-flex;align-items:center;justify-content:center}.science-top button,.quiet-button{min-height:44px}.explain-value{min-height:40px}.fine,.rating-ends,.town-stats small,.soil-metrics span,.scene-caption,.village-legend p,.map-update-note{font-size:11px}.project small{font-size:11px}.project em{font-size:10px}}
+
+.multi-project{display:flex;text-align:left;gap:12px}.multi-project>div{min-width:0;flex:1}.multi-project p{margin:6px 0}.multi-project .quantity-row{margin:12px 0}.multi-project.selected{border-color:#43835a;background:#f0f8ed}

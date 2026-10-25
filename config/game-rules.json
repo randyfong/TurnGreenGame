@@ -7,7 +7,7 @@
     "annual_limit_coins": 100,
     "usd_per_coin": 10,
     "carry_forward": false,
-    "policies_per_year": 1,
+    "policies_per_year": 3,
     "minimum_units": 1
   },
   "grid": {

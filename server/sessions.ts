@@ -1,3 +1,4 @@
+import {turnProjects} from '../shared/planning';
 import {resolutionInput,resolutionMetrics,type ResolutionDetails} from '../shared/resolution';
 import {applyDrySeason,livingCover,noProjectCover} from '../shared/dryland';
 import { randomUUID } from 'node:crypto';
@@ -34,7 +35,7 @@ export class SessionStore {
     const generated=await this.gateway.call('resolution','generate_youth_resolution',resolutionInput(s,details)) as {author_name?:string;district_name?:string;biophysical_scorecard?:Record<string,unknown>};
     const score=generated?.biophysical_scorecard;
     if(generated?.author_name!==details.author_name||generated.district_name!==details.district_name||!score||['total_modeled_retention_m3','baseline_runoff_reduction_m3','net_built_up_reduced_ha','ground_depaved_ha','total_ground_interventions_ha','rooftop_treated_ha'].some(k=>typeof score[k]!=='number'||Math.abs(Number(score[k])-metrics[k as keyof typeof metrics])>(k.endsWith("_m3")?.51:.011)))throw new RequestError('The document service returned different numbers. Your game is saved; try again.',502);
-    s.resolution={details,created_at:new Date().toISOString(),metrics,years:s.history.map(t=>({year:t.year,policy:t.policy,coins:t.spend_coins,cooling:t.result.science_payload.invest_urban_cooling.surface_temp_drop_celsius})),rating_change:s.assessment_result.learning_gain.average_normalized_gain};
+    s.resolution={details,created_at:new Date().toISOString(),metrics,years:s.history.map(t=>({year:t.year,policy:t.policy,policies:turnProjects(t).map(p=>p.policy),coins:t.spend_coins,cooling:t.result.science_payload.invest_urban_cooling.surface_temp_drop_celsius})),rating_change:s.assessment_result.learning_gain.average_normalized_gain};
     this.commit(s);return structuredClone(s);
   });}
   async post(id:string, answers:Assessment) {return this.locked(id,async()=>{
@@ -51,18 +52,25 @@ export class SessionStore {
   async turn(id:string, input:TurnInput) { return this.locked(id,async()=>{
     const s=this.get(id);
     if(!input || typeof input.request_id!=='string'||input.request_id.length<1||input.request_id.length>100)throw new RequestError('A request identifier is required.');
+    const choices=input.projects??[{policy:input.policy,quantity:input.quantity}];
+    if(!Array.isArray(choices)||!choices.length||choices.length>rules.interventions.length)throw new RequestError('Choose at least one project.');
+    const normalized=choices.map(c=>{const p=rules.interventions.find(p=>p.id===c?.policy);if(!p||typeof c.quantity!=='number'||!Number.isInteger(c.quantity)||c.quantity<1||c.quantity>p.max_units_per_year)throw new RequestError('Choose valid projects and whole units.');return {policy:p.id as import('../shared/types').Policy,quantity:c.quantity};}).sort((a,b)=>a.policy.localeCompare(b.policy));
+    if(new Set(normalized.map(c=>c.policy)).size!==normalized.length)throw new RequestError('Combine duplicate project types.');
     const committed=s.history.find(t=>t.year===input.year || t.request_id===input.request_id);
-    if(committed){if(committed.year===input.year && committed.request_id===input.request_id && committed.policy===input.policy&&committed.quantity===input.quantity)return s;throw new RequestError('This year or request is already committed.',409);}
+    if(committed){if(committed.year===input.year && committed.request_id===input.request_id && JSON.stringify(turnProjects(committed).slice().sort((a,b)=>a.policy.localeCompare(b.policy)))===JSON.stringify(normalized))return s;throw new RequestError('This year or request is already committed.',409);}
     if(s.phase!=='planning'||input.year!==s.year||!Number.isInteger(input.year)||input.year>rules.years)throw new RequestError('This is not the current planning year.',409);
-    const policy=rules.interventions.find(p=>p.id===input.policy);
-    if(!policy||!Number.isInteger(input.quantity)||input.quantity<1||input.quantity>policy.max_units_per_year)throw new RequestError('Choose a valid intervention and whole number of units.');
-    const spend=policy.unit_cost_coins*input.quantity; const usd=spend*rules.budget.usd_per_coin;
+    const spend=normalized.reduce((sum,c)=>sum+rules.interventions.find(p=>p.id===c.policy)!.unit_cost_coins*c.quantity,0);const usd=spend*rules.budget.usd_per_coin;
     if(spend>rules.budget.annual_limit_coins||usd>s.engine.remaining_budget)throw new RequestError('This investment exceeds your budget.');
     const dry=s.scenario_version==='dryland-v1'?applyDrySeason(s.engine,s.year,s.history):undefined;
-    const result=await this.gateway.call('simulation','simulate_policy_turn',{turn:s.year,intervention_id:input.policy,budget_allocated:usd,current_state:dry?.state??s.engine}) as Simulation;
-    validateSimulation(result,s,usd,input.policy);
+    let result:Simulation;
+    if(input.projects){
+      const raw=await this.gateway.call('simulation','simulate_year_plan',{year:s.year,annual_budget_limit:rules.budget.annual_limit_coins*rules.budget.usd_per_coin,current_state:dry?.state??s.engine,projects:normalized.map(c=>({intervention_id:c.policy,budget_allocated:rules.interventions.find(p=>p.id===c.policy)!.unit_cost_coins*c.quantity*rules.budget.usd_per_coin}))}) as {year:number;total_budget_spent:number;projects_executed:NonNullable<Simulation['projects_executed']>;next_state:Simulation['next_state'];science_payload:Simulation['science_payload'];youth_scorecard:{overall_sustainability_score:number}};
+      if(raw.year!==s.year||raw.total_budget_spent!==usd||!Array.isArray(raw.projects_executed)||raw.projects_executed.length!==normalized.length||normalized.some(c=>{const matches=raw.projects_executed.filter(p=>p.intervention_id===c.policy);return matches.length!==1||matches[0].budget_capped||matches[0].budget_allocated!==rules.interventions.find(p=>p.id===c.policy)!.unit_cost_coins*c.quantity*rules.budget.usd_per_coin||!Number.isFinite(matches[0].area_converted_hectares)||matches[0].area_converted_hectares<0;}))throw new RequestError('The yearly simulation returned inconsistent projects. Nothing was saved.',502);
+      result={turn:s.year,intervention:{id:normalized[0].policy,budget_allocated:usd,area_converted_hectares:raw.projects_executed.reduce((n,p)=>n+p.area_converted_hectares,0)},projects_executed:raw.projects_executed,next_state:raw.next_state,science_payload:raw.science_payload,player_metrics:{community_cheer_score:raw.youth_scorecard?.overall_sustainability_score}};
+    }else result=await this.gateway.call('simulation','simulate_policy_turn',{turn:s.year,intervention_id:normalized[0].policy,budget_allocated:usd,current_state:dry?.state??s.engine}) as Simulation;
+    validateSimulation(result,s,usd,normalized[0].policy);
     if(dry){dry.impact.after_project_vegetation_pct=livingCover(result.next_state.land_cover);dry.impact.no_project_vegetation_pct=livingCover(noProjectCover(s.engine.baseline_land_cover as typeof s.engine.land_cover,s.engine.total_area_hectares,s.year));}
-    s.history.push({dry_season:dry?.impact,year:s.year,request_id:input.request_id,policy:input.policy,quantity:input.quantity,spend_coins:spend,unused_allowance:100-spend,result});
+    s.history.push({dry_season:dry?.impact,year:s.year,request_id:input.request_id,projects:input.projects?normalized:undefined,policy:normalized[0].policy,quantity:normalized[0].quantity,spend_coins:spend,unused_allowance:100-spend,result});
     s.engine=result.next_state; if(s.year===rules.years)s.phase='complete';else s.year++;
     this.commit(s);return structuredClone(s);
   }); }

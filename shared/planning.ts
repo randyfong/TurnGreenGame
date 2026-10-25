@@ -13,3 +13,8 @@ export function planningBudget(session:Session){
 }
 export function runoffReduction(turn:Turn){const f=turn.result.science_payload.invest_urban_flood;return f.baseline_runoff_mm>0?(f.baseline_runoff_mm-f.post_runoff_mm)/f.baseline_runoff_mm*100:null;}
 export function signedArea(value:number){const rounded=Math.round(value*100)/100;return `${rounded>0?'+':''}${rounded.toFixed(2)} ha`;}
+
+export function turnProjects(turn:Turn){return turn.projects??[{policy:turn.policy,quantity:turn.quantity}];}
+export function projectCoins(policy:Policy,quantity:number){return rules.interventions.find(p=>p.id===policy)!.unit_cost_coins*quantity;}
+
+export function turnAllocations(turn:Turn){return turn.projects?turn.projects.map(p=>({...p,coins:projectCoins(p.policy,p.quantity)})):[{policy:turn.policy,quantity:turn.quantity,coins:turn.spend_coins}];}

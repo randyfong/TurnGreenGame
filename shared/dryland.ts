@@ -1,3 +1,4 @@
+import {turnAllocations} from './planning';
 import type {EngineState,LandCover,Turn} from './types';
 /** Educational scenario parameters, not calibrated drought/erosion predictions. */
 export const drySeasons = [
@@ -14,7 +15,7 @@ export function applyDrySeason(state:EngineState,year:number,history:Turn[]=[]):
  const event=drySeasons[year-1];if(!event)throw Error('Dry-season year must be between 1 and 5.');
  const result=structuredClone(state);result.baseline_land_cover??=structuredClone(state.land_cover);
  // Established rain-garden projects reduce subsequent scenario losses, up to 45%.
- const protection=Math.min(.45,history.filter(t=>t.policy==='bioswales').reduce((sum,t)=>sum+t.spend_coins,0)/600);
+ const protection=Math.min(.45,history.flatMap(turnAllocations).filter(p=>p.policy==='bioswales').reduce((sum,p)=>sum+p.coins,0)/600);
  const sensitivity={tree_cover_10:.4,shrubland_20:.6,grassland_30:1,cropland_40:1};
  let lost=0;
  for(const key of vegetationKeys){const loss=result.land_cover[key]*event.lossRate*sensitivity[key]*(1-protection);result.land_cover[key]-=loss;lost+=loss;}

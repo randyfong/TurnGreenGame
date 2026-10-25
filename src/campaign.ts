@@ -1,3 +1,4 @@
+import {turnProjects,turnAllocations} from '../shared/planning';
 import type {Policy, Turn} from '../shared/types';
 export const projects:Record<Policy,{name:string;icon:string;description:string;strength:string;verb:string}>={
  urban_canopy_trees:{name:'Shade squad',icon:'🌳',description:'Restore shade and living cover on exposed ground.',strength:'Shade + rain capture',verb:'Plant the plan'},
@@ -13,8 +14,8 @@ export const missions=[
 ] as const;
 export function missionWon(turn:Turn,history:Turn[]):boolean {
  const m=missions[turn.year-1];if(!m)return false;
- if(turn.year===4)return turn.policy!=='cool_roofs'&&turn.spend_coins>=75;
- if(turn.year===5)return new Set(history.filter(t=>t.year<=5).map(t=>t.policy)).size===3;
- return (m.policy===null||m.policy===turn.policy)&&turn.spend_coins>=m.min;
+ if(turn.year===4)return turnAllocations(turn).filter(p=>p.policy!=='cool_roofs').reduce((n,p)=>n+p.coins,0)>=75;
+ if(turn.year===5)return new Set(history.filter(t=>t.year<=5).flatMap(turnProjects).map(p=>p.policy)).size===3;
+ return turnAllocations(turn).some(p=>(m.policy===null||m.policy===p.policy)&&p.coins>=m.min);
 }
 export function earnedBadges(history:Turn[]){return history.filter(t=>missionWon(t,history)).map(t=>missions[t.year-1]);}
