@@ -2,9 +2,9 @@ import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {SessionStore} from '../server/sessions';
 import type {ToolGateway, EngineState} from '../shared/types';
-function fixture(){let calls=0;let bad=false;let release:(()=>void)|undefined;let block=false;
- const gateway:ToolGateway={close:async()=>{},call:async(server,_name,args)=>{if(server==='assessment')return {status:'recorded'};calls++;if(block)await new Promise<void>(r=>release=r);const s=args.current_state as EngineState;return {turn:args.turn,intervention:{id:args.intervention_id,budget_allocated:args.budget_allocated,area_converted_hectares:1},next_state:{...s,remaining_budget:s.remaining_budget-Number(args.budget_allocated)+(bad?1:0)},player_metrics:{community_cheer_score:50},science_payload:{invest_urban_cooling:{surface_temp_drop_celsius:.1},invest_urban_flood:{baseline_runoff_mm:20,post_runoff_mm:18,stormwater_retained_m3:100,incremental_runoff_reduction_m3:1000}}};}};
- return {store:new SessionStore(gateway),calls:()=>calls,bad:()=>bad=true,block:()=>block=true,release:()=>release?.()};}
+function fixture(){let calls=0;let bad=false;let release:(()=>void)|undefined;let block=false;let failNext=false;
+ const gateway:ToolGateway={close:async()=>{},call:async(server,_name,args)=>{if(server==='assessment')return {status:'recorded'};calls++;if(failNext){failNext=false;throw new Error('Temporary simulation outage');}if(block)await new Promise<void>(r=>release=r);const s=args.current_state as EngineState;return {turn:args.turn,intervention:{id:args.intervention_id,budget_allocated:args.budget_allocated,area_converted_hectares:1},next_state:{...s,remaining_budget:s.remaining_budget-Number(args.budget_allocated)+(bad?1:0)},player_metrics:{community_cheer_score:50},science_payload:{invest_urban_cooling:{surface_temp_drop_celsius:.1},invest_urban_flood:{baseline_runoff_mm:20,post_runoff_mm:18,stormwater_retained_m3:100,incremental_runoff_reduction_m3:1000}}};}};
+ return {store:new SessionStore(gateway),calls:()=>calls,bad:()=>bad=true,failOnce:()=>failNext=true,block:()=>block=true,release:()=>release?.()};}
 async function ready(f:ReturnType<typeof fixture>){const s=f.store.create('crowded_market');return f.store.baseline(s.id,{q1_canopy_flooding:2,q2_pavement_heat:3});}
 const input={year:1,request_id:'retry-test',policy:'urban_canopy_trees' as const,quantity:2};
 test('reject invalid spending before a tool call',async()=>{const f=fixture(),s=await ready(f);for(const quantity of [0,1.5,5,-1])await assert.rejects(f.store.turn(s.id,{...input,quantity}));assert.equal(f.calls(),0);});
@@ -12,3 +12,28 @@ test('identical retry commits once; changed request conflicts',async()=>{const f
 test('inconsistent response rolls back and unlocks session',async()=>{const f=fixture(),s=await ready(f);f.bad();await assert.rejects(f.store.turn(s.id,input));assert.equal(f.store.get(s.id).year,1);assert.equal(f.store.get(s.id).engine.remaining_budget,5000);await assert.rejects(f.store.turn(s.id,input));assert.equal(f.calls(),2);});
 test('concurrent submission cannot double-spend',async()=>{const f=fixture(),s=await ready(f);f.block();const pending=f.store.turn(s.id,input);await assert.rejects(f.store.turn(s.id,input));f.release();await pending;assert.equal(f.calls(),1);});
 test('baseline required; five turns finish; returned objects cannot mutate store',async()=>{const f=fixture();const s=f.store.create('riverside_valley');s.engine.remaining_budget=0;assert.equal(f.store.get(s.id).engine.remaining_budget,5000);await assert.rejects(f.store.turn(s.id,input));await f.store.baseline(s.id,{q1_canopy_flooding:1,q2_pavement_heat:1});for(let year=1;year<=5;year++)await f.store.turn(s.id,{...input,year,request_id:'year-'+year});assert.equal(f.store.get(s.id).phase,'complete');await assert.rejects(f.store.turn(s.id,{...input,year:6,request_id:'year-6'}));});
+
+test('failed simulation preserves the entire committed state, including dryland cover, and can retry',async()=>{
+ const f=fixture(),s=await ready(f);const before=f.store.get(s.id);f.failOnce();
+ await assert.rejects(f.store.turn(s.id,input),/Temporary simulation outage/);
+ assert.deepEqual(f.store.get(s.id),before);
+ const committed=await f.store.turn(s.id,input);assert.equal(committed.history.length,1);assert.equal(committed.engine.remaining_budget,4500);assert.equal(f.calls(),2);
+});
+test('five years conserve total funds and expired allowances; final year cannot be resubmitted differently',async()=>{
+ const f=fixture(),s=await ready(f);
+ const choices=[['urban_canopy_trees',4],['bioswales',3],['cool_roofs',6],['urban_canopy_trees',3],['urban_canopy_trees',4]] as const;
+ for(let i=0;i<choices.length;i++){
+  const [policy,quantity]=choices[i];await f.store.turn(s.id,{year:i+1,policy,quantity,request_id:'full-loop-'+i});
+ }
+ const end=f.store.get(s.id);assert.equal(end.phase,'complete');assert.equal(end.history.length,5);assert.equal(end.engine.remaining_budget,450);
+ assert.equal(end.history.reduce((sum,t)=>sum+t.spend_coins,0),455);assert.equal(end.history.reduce((sum,t)=>sum+t.unused_allowance,0),45);
+ const replay=await f.store.turn(s.id,{year:5,policy:'urban_canopy_trees',quantity:4,request_id:'full-loop-4'});assert.deepEqual(replay,end);assert.equal(f.calls(),5);
+ await assert.rejects(f.store.turn(s.id,{year:5,policy:'urban_canopy_trees',quantity:3,request_id:'different-final'}));
+});
+test('wrong year, reused request identifiers, and unknown policies cannot advance or spend',async()=>{
+ const f=fixture(),s=await ready(f);
+ await assert.rejects(f.store.turn(s.id,{...input,year:2}));
+ await assert.rejects(f.store.turn(s.id,{...input,policy:'not-a-policy' as typeof input.policy}));
+ await f.store.turn(s.id,input);const committed=f.store.get(s.id);
+ await assert.rejects(f.store.turn(s.id,{...input,year:2}));assert.deepEqual(f.store.get(s.id),committed);assert.equal(f.calls(),1);
+});

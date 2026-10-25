@@ -1,4 +1,4 @@
-# CoolTown Implementation Plan
+# CoolVillage Implementation Plan
 
 > Current setting and land-loss rules: [DRYLAND_VILLAGE.md](DRYLAND_VILLAGE.md) supersedes the earlier urban profile table and story-only degradation treatment. The game now uses a remote-village dryland scenario. Budget and transactional rules are retained.
 
@@ -22,12 +22,14 @@ Keep game rules and session history separate from React rendering. The backend v
 
 **Step 3 implemented (October 24, 2026):** React/TypeScript/Vite scaffold, Node MCP bridge, typed state, both profiles, guarded annual transactions, and baseline integration are working. Both profiles completed five live turns with unit-sized allocations. See [FOUNDATION_VALIDATION.md](FOUNDATION_VALIDATION.md) and [run instructions](../README.md). Durable saves and later game surfaces remain in their planned stages.
 
+**Step 4 complete (October 24, 2026):** The five-year loop now includes a budget HUD, review/cancel/confirm, guarded submission, full annual results, an expandable results journal, and a final five-year table. Verified in a complete real-server browser game and 16 automated tests. See [PLANNING_LOOP.md](PLANNING_LOOP.md).
+
 | Step | Work | Completion check |
 | :--- | :--- | :--- |
 | **1. Validate the existing tools** | Exercise simulation, science, assessment, and resolution generation with a sample session. Capture actual response shapes and errors. | All four tools return usable structured results. |
 | **2. Reconcile the specifications** | Define the budget model, intervention mapping, parcel rules, assessment wording, and metric meanings. | One consistent set of gameplay rules matches the tools. |
 | **3. Build the application foundation** | Scaffold the SPA and backend bridge. Define typed session state, tool adapters, and two pre-baked neighborhood profiles. | Browser can load a neighborhood and request a simulation. |
-| **4. Implement the planning loop** | Build the 4×4 grid, intervention palette, budget display, five-year progression, and annual result summaries. | A player can complete five turns without overspending or submitting twice. |
+| **4. Implement the planning loop — complete** | Build the 4×4 grid, intervention palette, budget display, five-year progression, and annual result summaries. | A player can complete five turns without overspending or submitting twice. |
 | **5. Add explanations and feedback** | Translate technical outputs into plain language. Add the science drawer, citations, and lightweight parcel transitions. | Each displayed environmental change has a traceable explanation. |
 | **6. Add assessments and recovery** | Record identical pre/post questions. Save session state locally and restore it on refresh. | Assessment results and game progress survive refreshes and recoverable failures. |
 | **7. Generate the civic resolution** | Pass actual session history to the resolution tool. Add author/district fields, a controlled resolution template, validated metric overrides, and single-page print styling. | The completed game produces a readable one-page resolution through Print / Save as PDF. |
@@ -40,7 +42,7 @@ Keep game rules and session history separate from React rendering. The backend v
 | Topic | Adopted rule |
 | :--- | :--- |
 | Budget | 500 total coins; maximum 100 per year; unused annual allowance does not carry forward. |
-| Units | 1 coin = $1,000 modeled USD. Tree/rain-garden/roof investment units cost 25/30/15 coins. Units are budget increments, not exact parcels. |
+| Units | 1 coin = $10 modeled USD. Tree/rain-garden/roof investment units cost 25/30/15 coins. Units are budget increments, not exact parcels. |
 | Annual action | One intervention type per year; multiple whole investment units in a single simulation call. |
 | Grid | 4×4 schematic, mixed land-cover overview; squares open explanations. The aggregate engine does not support spatial targeting. |
 | Land cover | Class 20 is shrubland, class 30 grassland. Two synthetic 50-ha neighborhood profiles are defined. |
