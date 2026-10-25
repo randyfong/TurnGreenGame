@@ -15,15 +15,15 @@ export function BudgetHUD({session,selectedCoins=0,onExplain}:{session:Session;s
 }
 
 export function PlanReview({session,choices,onCancel,onConfirm}:{session:Session;choices:ProjectChoice[];onCancel:()=>void;onConfirm:()=>void}){
- const ref=useRef<HTMLDialogElement>(null);const submitted=useRef(false);const coins=choices.reduce((n,c)=>n+investment(c.policy,c.quantity).coins,0);const cost={coins,usd:coins*rules.budget.usd_per_coin,unused:100-coins};
+ const ref=useRef<HTMLDialogElement>(null);const submitted=useRef(false);const coins=choices.reduce((n,c)=>n+investment(c.policy,c.quantity).coins,0);const cost={coins,usd:coins*rules.budget.usd_per_coin,unused:rules.budget.annual_limit_coins-coins};
  useEffect(()=>{ref.current?.showModal();},[]);
  return <dialog ref={ref} className="year-reveal plan-review" aria-labelledby="plan-review-title" onCancel={onCancel}>
   <p className="year-label">Year {session.year} of {rules.years}</p><h2 id="plan-review-title">Ready to put your plan to work?</h2>
-  {choices.map(({policy,quantity})=><div key={policy} className="review-project"><span aria-hidden="true">{projects[policy].icon}</span><div><strong>{projects[policy].name}</strong><p>{quantity} investment {quantity===1?'unit':'units'}</p></div></div>)}
-  <dl className="review-cost"><div><dt>Spend this year</dt><dd>{cost.coins} coins · ${cost.usd.toLocaleString()}</dd></div><div><dt>Unused this year</dt><dd>{cost.unused} coins</dd></div><div><dt>Total budget after project</dt><dd>{((session.engine.remaining_budget-cost.usd)/rules.budget.usd_per_coin).toLocaleString()} coins</dd></div></dl>
+  <div className="review-plan-table"><table><caption>Your selected projects for Year {session.year}</caption><thead><tr><th scope="col">Project</th><th scope="col">Units</th><th scope="col">Cost</th></tr></thead><tbody>{choices.map(({policy,quantity})=>{const quote=investment(policy,quantity);return <tr key={policy}><th scope="row"><span aria-hidden="true">{projects[policy].icon} </span>{projects[policy].name}</th><td>{quantity}</td><td><strong>{quote.coins} coins</strong><small>${quote.usd.toLocaleString()}</small></td></tr>;})}</tbody><tfoot><tr><th scope="row" colSpan={2}>Total for this year</th><td><strong>{cost.coins} coins</strong><small>${cost.usd.toLocaleString()}</small></td></tr></tfoot></table></div>
+  <dl className="review-cost"><div><dt>Spend this year</dt><dd>{cost.coins} coins · ${cost.usd.toLocaleString()}</dd></div><div><dt>Unused this year</dt><dd>{cost.unused} coins</dd></div><div><dt>Total budget after this plan</dt><dd>{((session.engine.remaining_budget-cost.usd)/rules.budget.usd_per_coin).toLocaleString()} coins</dd></div></dl>
   <p className="fine">You get up to 100 coins each year. Unspent coins cannot be used in later years, even though they still appear in the unused total. Mix project types within your yearly budget.</p>
-  <p className="review-warning">The dry season and project will be calculated together. You can edit now; a completed year cannot be undone.</p>
-  <div className="review-actions"><button className="secondary" autoFocus onClick={onCancel}>Keep planning</button><button className="primary" onClick={()=>{if(submitted.current)return;submitted.current=true;onConfirm();}}>End Year {session.year}</button></div>
+  <p className="review-warning">The dry season is applied once, then all selected projects are calculated together. You can edit now; a completed year cannot be undone.</p>
+  <div className="review-actions"><button className="secondary" autoFocus onClick={onCancel}>Keep planning</button><button className="primary" disabled={!choices.length||cost.coins>rules.budget.annual_limit_coins||cost.usd>session.engine.remaining_budget} onClick={()=>{if(submitted.current||!choices.length||cost.coins>rules.budget.annual_limit_coins||cost.usd>session.engine.remaining_budget)return;submitted.current=true;onConfirm();}}>End Year {session.year}</button></div>
  </dialog>;
 }
 
