@@ -1,0 +1,3 @@
+import {rules,type LandCover} from './types';
+export function plotMix(cover:LandCover,index:number){let cursor=0;const size=100/(rules.grid.rows*rules.grid.columns);return rules.grid.class_order.map(key=>{const start=cursor;cursor+=cover[key as keyof LandCover];return {key,amount:Math.max(0,Math.min(cursor,(index+1)*size)-Math.max(start,index*size))};}).filter(s=>s.amount>0);}
+export function plotChanged(current:LandCover,previous:LandCover|undefined,index:number){if(!previous)return false;const a=plotMix(current,index),b=plotMix(previous,index);return a.length!==b.length||a.some((s,i)=>s.key!==b[i]?.key||Math.abs(s.amount-b[i].amount)>.0001);}

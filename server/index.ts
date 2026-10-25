@@ -4,8 +4,9 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { rules } from '../shared/types';
 import { MCPGateway } from './mcp';
+import {ScienceService} from './science';
 import { RequestError, SessionStore } from './sessions';
-const gateway=new MCPGateway();const store=new SessionStore(gateway);
+const gateway=new MCPGateway();const store=new SessionStore(gateway);const science=new ScienceService(gateway);
 const root=fileURLToPath(new URL('../',import.meta.url));
 const production=process.env.NODE_ENV==='production';
 const vite=production?null:await (await import('vite')).createServer({root,server:{middlewareMode:true,watch:{usePolling:true,interval:300}},appType:'spa'});
@@ -23,6 +24,7 @@ const server=createServer(async(req,res)=>{
     let body:any={};if(req.method==='POST'){let raw='';for await(const chunk of req){raw+=chunk;if(raw.length>16384)throw new RequestError('Request too large.',413);}try{body=JSON.parse(raw);}catch{throw new RequestError('Invalid JSON.');}if(!body||typeof body!=='object'||Array.isArray(body))throw new RequestError('Invalid request body.');}
     let out:unknown; const m=url.pathname.match(/^\/api\/sessions\/([a-f0-9-]+)(?:\/(baseline|turn))?$/);
     if(req.method==='GET'&&url.pathname==='/api/config')out=rules;
+    else if(req.method==='GET'&&url.pathname==='/api/science')out=await science.get(url.searchParams.get('topic')??'');
     else if(req.method==='GET'&&url.pathname==='/api/health')out={status:'ok',simulation:'connects on first request',persistence:'memory only'};
     else if(req.method==='POST'&&url.pathname==='/api/sessions')out=store.create(body.profile_id);
     else if(m&&req.method==='GET'&&!m[2])out=store.get(m[1]);

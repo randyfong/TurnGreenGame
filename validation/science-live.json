@@ -1,0 +1,346 @@
+{
+  "captured_at": "2026-10-25T05:41:52.730Z",
+  "references": [
+    {
+      "topic_id": "invest_urban_cooling",
+      "title": "Stanford InVEST Urban Cooling Model v3.14",
+      "equations": [
+        "HMI = 0.6 * ET_r + 0.2 * Albedo + 0.2 * Shade",
+        "T_reduction = HMI * max_cooling_potential (3.5°C)",
+        "ET_r = Reference Evapotranspiration Index (0.0 for asphalt, 0.90 for dense forest canopy)",
+        "Albedo: Reflectivity of solar radiation (0.12 for dark asphalt, 0.70 for cool reflective roofs)"
+      ],
+      "citations": [
+        {
+          "title": "InVEST 3.14.0 Urban Cooling Model User Guide & Biophysical Theoretical Background",
+          "source": "Stanford University: Natural Capital Project",
+          "link": "https://invest-userguide.readthedocs.io/en/latest/urban_cooling_model.html"
+        },
+        {
+          "title": "Cooling the cities—a review of reflective and green roof mitigation technologies to fight heat island and improve comfort in urban environments",
+          "source": "Solar Energy, 103, 682-703",
+          "link": "https://doi.org/10.1016/j.solener.2012.07.003"
+        }
+      ]
+    },
+    {
+      "topic_id": "invest_flood_risk",
+      "title": "Stanford InVEST Urban Flood Risk (USDA SCS-CN)",
+      "equations": [
+        "S = (25400 / CN) - 254 (Maximum Soil Potential Retention in mm)",
+        "Q = (P - 0.2 * S)^2 / (P + 0.8 * S) (Direct Runoff Depth in mm for P > 0.2S)",
+        "Volume Retained (m³) = (P - Q) / 1000 * Total Area (m²)",
+        "Design Storm (P) = 50.0 mm (standard 2-year 24-hour urban storm event)"
+      ],
+      "citations": [
+        {
+          "title": "InVEST Urban Flood Risk Mitigation Model & USDA-SCS Runoff Curve Number Estimation",
+          "source": "Stanford University / National Engineering Handbook Section 4",
+          "link": "https://invest-userguide.readthedocs.io/en/latest/urban_flood_mitigation.html"
+        },
+        {
+          "title": "Green Infrastructure in Urban Stormwater Management: Permeable Pavements and Bioretention Performance",
+          "source": "EPA Office of Water Document 841-B-18-001",
+          "link": "https://www.epa.gov/soakuptherain/soak-rain-permeable-pavement"
+        }
+      ]
+    },
+    {
+      "topic_id": "esa_worldcover",
+      "title": "ESA WorldCover 10-Meter Land Classification",
+      "equations": [
+        "Cell Resolution = 10m x 10m (100 m² per pixel)",
+        "Class 50: Built-up (Impervious structures, asphalt, buildings)",
+        "Class 10: Tree cover (Canopy trees, urban street corridors)",
+        "Class 20/30: Shrubland & Grassland (Parks, bioswales, open lawns)"
+      ],
+      "citations": [
+        {
+          "title": "ESA WorldCover 10 m 2021 v200: Global Land Cover Product Description and Validation",
+          "source": "European Space Agency (ESA) Open Access",
+          "link": "https://doi.org/10.5281/zenodo.5571936"
+        },
+        {
+          "title": "SDG Indicator Metadata: Target 15.3, Indicator 15.3.1 (Proportion of land that is degraded over total land area)",
+          "source": "United Nations SDG Global Database",
+          "link": "https://unstats.un.org/sdgs/metadata/files/Metadata-15-03-01.pdf"
+        }
+      ]
+    },
+    {
+      "topic_id": "urban_canopy_trees",
+      "title": "Urban Canopy Expansion: Street Trees & Green Corridors",
+      "equations": [
+        "Net Evapotranspiration ET_r = 1.0 (Canopy ET)",
+        "Vegetation Fraction Fv = 0.95",
+        "Composite Curve Number shift: Built-up Class 50 (CN 98) -> Tree Canopy Class 10 (CN 55)",
+        "Conversion rule: Converts 0.70% Built-up and 0.30% Bare Soil per 1.0% Tree Canopy expansion"
+      ],
+      "citations": [
+        {
+          "title": "InVEST 3.14.0 Urban Cooling Model User Guide & Biophysical Theoretical Background",
+          "source": "Stanford University: Natural Capital Project",
+          "link": "https://invest-userguide.readthedocs.io/en/latest/urban_cooling_model.html"
+        },
+        {
+          "title": "InVEST Urban Flood Risk Mitigation Model & USDA-SCS Runoff Curve Number Estimation",
+          "source": "Stanford University / National Engineering Handbook Section 4",
+          "link": "https://invest-userguide.readthedocs.io/en/latest/urban_flood_mitigation.html"
+        },
+        {
+          "title": "SDG Indicator Metadata: Target 15.3, Indicator 15.3.1 (Proportion of land that is degraded over total land area)",
+          "source": "United Nations SDG Global Database",
+          "link": "https://unstats.un.org/sdgs/metadata/files/Metadata-15-03-01.pdf"
+        }
+      ]
+    },
+    {
+      "topic_id": "bioswales",
+      "title": "Bioswales & Bioretention Rain Gardens",
+      "equations": [
+        "Runoff Curve Number shift: Built-up (98) & Bare Soil (82) -> Shrubland (65) + Grassland (68)",
+        "Conversion rule: Replaces 0.8% Built-up and 0.2% Bare Soil with 0.6% Shrubland and 0.4% Grassland",
+        "Runoff Retention Efficiency: >85% for standard 50mm storm"
+      ],
+      "citations": [
+        {
+          "title": "InVEST Urban Flood Risk Mitigation Model & USDA-SCS Runoff Curve Number Estimation",
+          "source": "Stanford University / National Engineering Handbook Section 4",
+          "link": "https://invest-userguide.readthedocs.io/en/latest/urban_flood_mitigation.html"
+        },
+        {
+          "title": "Green Infrastructure in Urban Stormwater Management: Permeable Pavements and Bioretention Performance",
+          "source": "EPA Office of Water Document 841-B-18-001",
+          "link": "https://www.epa.gov/soakuptherain/soak-rain-permeable-pavement"
+        },
+        {
+          "title": "Trends.Earth: Innovative Desktop and Cloud-based Platform to Support Land Degradation Neutrality Monitoring",
+          "source": "UNCCD Scientific and Technical Publications",
+          "link": "https://trends.earth/docs/en/"
+        }
+      ]
+    },
+    {
+      "topic_id": "cool_roofs",
+      "title": "Cool Surface & Reflective Roof Retrofits",
+      "equations": [
+        "Surface Albedo Boost: +0.35 solar reflectance boost across treated area",
+        "District Albedo Shift: Delta Albedo = 0.35 * (Treated Hectares / Total District Area)",
+        "Persistent State: Treated roof area persists across all remaining turns"
+      ],
+      "citations": [
+        {
+          "title": "Global cooling: increasing world-wide urban albedos to offset CO2",
+          "source": "Climatic Change, 94(3), 275-286",
+          "link": "https://doi.org/10.1007/s10584-008-9515-9"
+        },
+        {
+          "title": "Cooling the cities—a review of reflective and green roof mitigation technologies to fight heat island and improve comfort in urban environments",
+          "source": "Solar Energy, 103, 682-703",
+          "link": "https://doi.org/10.1016/j.solener.2012.07.003"
+        }
+      ]
+    },
+    {
+      "topic_id": "dryland_scenario",
+      "title": "Why is living cover disappearing?",
+      "equations": [],
+      "citations": [
+        {
+          "title": "Desertification and land degradation: Article 1",
+          "source": "UNCCD",
+          "link": "https://www.unccd.int/article-1-use-terms"
+        }
+      ]
+    },
+    {
+      "topic_id": "game_rules",
+      "title": "What is a game rule?",
+      "equations": [],
+      "citations": []
+    }
+  ],
+  "example_turn": {
+    "dry_season": {
+      "title": "The first long dry spell",
+      "scenario_loss_rate": 0.08,
+      "protection_fraction": 0,
+      "vegetation_lost_ha": 1.4,
+      "before_vegetation_pct": 45,
+      "after_dry_season_vegetation_pct": 42.2,
+      "after_project_vegetation_pct": 42.269999999999996,
+      "no_project_vegetation_pct": 42.2
+    },
+    "year": 1,
+    "request_id": "science-evidence-check",
+    "policy": "urban_canopy_trees",
+    "quantity": 2,
+    "spend_coins": 50,
+    "unused_allowance": 50,
+    "result": {
+      "turn": 1,
+      "intervention": {
+        "id": "urban_canopy_trees",
+        "name": "Street Tree Canopy Expansion",
+        "budget_requested": 500,
+        "budget_allocated": 500,
+        "budget_capped": false,
+        "area_converted_hectares": 0.03,
+        "pct_area_converted": 0.07
+      },
+      "next_state": {
+        "total_area_hectares": 50,
+        "remaining_budget": 4500,
+        "roof_treatment_hectares": 0,
+        "baseline_runoff_mm": 12.33,
+        "baseline_land_cover": {
+          "tree_cover_10": 10,
+          "shrubland_20": 10,
+          "grassland_30": 15,
+          "cropland_40": 10,
+          "built_up_50": 25,
+          "bare_soil_60": 30,
+          "water_80": 0
+        },
+        "land_cover": {
+          "tree_cover_10": 9.75,
+          "shrubland_20": 9.52,
+          "grassland_30": 13.8,
+          "cropland_40": 9.2,
+          "built_up_50": 24.95,
+          "bare_soil_60": 32.78,
+          "water_80": 0
+        }
+      },
+      "player_summary": {
+        "headline": "Big climate win! Street Tree Canopy Expansion cools streets and absorbs rain.",
+        "youth_takeaway": "Playgrounds are cooler at noon, and street puddles vanish almost immediately after downpours!",
+        "cooling_stars": 2,
+        "temperature_drop_display": "0.0°C (Baseline)",
+        "water_retention_analogy": "Soaked up 18,651 m³ of rain—equivalent to filling 7.5 Olympic swimming pools (or ~62,170 full bathtubs)!",
+        "neighborhood_vibe": "Pleasantly Fresh (Comfortable 🌳)"
+      },
+      "player_metrics": {
+        "overall_sustainability_score": 67,
+        "cooling_score": 48,
+        "flood_resilience_score": 86,
+        "community_cheer_score": 71,
+        "design_storm_total_retained_m3": 18651,
+        "incremental_runoff_reduction_m3": 0
+      },
+      "science_payload": {
+        "models_referenced": [
+          "Stanford InVEST Urban Cooling Model v3.14 (Heat Mitigation Index)",
+          "Stanford InVEST Urban Flood Risk Mitigation Model (USDA SCS-CN Curve Number)",
+          "ESA WorldCover 10m Land Cover Classification"
+        ],
+        "esa_worldcover_shifts": {
+          "tree_cover_10": {
+            "prior_pct": 9.68,
+            "post_pct": 9.75,
+            "delta_pct": 0.07
+          },
+          "shrubland_20": {
+            "prior_pct": 9.52,
+            "post_pct": 9.52,
+            "delta_pct": 0
+          },
+          "grassland_30": {
+            "prior_pct": 13.8,
+            "post_pct": 13.8,
+            "delta_pct": 0
+          },
+          "cropland_40": {
+            "prior_pct": 9.2,
+            "post_pct": 9.2,
+            "delta_pct": 0
+          },
+          "built_up_50": {
+            "prior_pct": 25,
+            "post_pct": 24.95,
+            "delta_pct": -0.05
+          },
+          "bare_soil_60": {
+            "prior_pct": 32.8,
+            "post_pct": 32.78,
+            "delta_pct": -0.02
+          },
+          "water_80": {
+            "prior_pct": 0,
+            "post_pct": 0,
+            "delta_pct": 0
+          }
+        },
+        "invest_urban_cooling": {
+          "prior_hmi": 0.3523,
+          "post_hmi": 0.3528,
+          "hmi_delta": 0.0005,
+          "surface_temp_drop_celsius": 0,
+          "surface_temp_drop_fahrenheit": 0,
+          "effective_albedo": {
+            "prior": 0.199,
+            "post": 0.199
+          },
+          "vegetation_fraction": {
+            "prior": 0.392,
+            "post": 0.393
+          },
+          "et_index": {
+            "prior": 0.386,
+            "post": 0.387
+          }
+        },
+        "invest_urban_flood": {
+          "design_storm_depth_mm": 50,
+          "baseline_runoff_mm": 12.33,
+          "prior_composite_cn": 78.9,
+          "post_composite_cn": 78.9,
+          "prior_runoff_mm": 12.72,
+          "post_runoff_mm": 12.7,
+          "retained_runoff_depth_mm": 37.3,
+          "stormwater_retained_m3": 18651,
+          "incremental_runoff_reduction_m3": 0,
+          "retention_efficiency_pct": 74.6
+        }
+      }
+    }
+  },
+  "evidence": [
+    {
+      "label": "Approx. signed runoff reduction vs. original (m³; negative = more runoff)",
+      "value": "-185.0"
+    },
+    {
+      "label": "Design storm (mm)",
+      "value": "50"
+    },
+    {
+      "label": "Original village runoff (mm)",
+      "value": "12.33"
+    },
+    {
+      "label": "Runoff before this project (mm)",
+      "value": "12.72"
+    },
+    {
+      "label": "Runoff after this project (mm)",
+      "value": "12.7"
+    },
+    {
+      "label": "Curve number before project",
+      "value": "78.9"
+    },
+    {
+      "label": "Curve number after project",
+      "value": "78.9"
+    },
+    {
+      "label": "Total modeled retention (m³)",
+      "value": "18651"
+    },
+    {
+      "label": "Engine-reported runoff reduction (m³)",
+      "value": "0"
+    }
+  ]
+}

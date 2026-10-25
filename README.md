@@ -68,3 +68,7 @@ Budget scale: each coin models $10 USD. A 100-coin annual allowance models $1,00
 ## Planning loop
 
 Step 4 is complete. Select a project and quantity, choose **Review year**, then **End Year** to commit. Canceling the review retains the draft and spends nothing. Every year has a result summary, accessible again in the village journal. After Year 5, the final table shows all investments and land outcomes. See [Docs/PLANNING_LOOP.md](Docs/PLANNING_LOOP.md) for verification and remaining stages.
+
+## Explanations and feedback
+
+Tap land figures, a map plot, **Why?**, or an annual-result label for the science drawer. It separates plain explanations, the selected year’s recorded evidence, optional formulas, and source links. Bundled copy and links remain usable when live references fail. `GET /api/science?topic=...` accepts the eight application topics; `node --import tsx scripts/validate-science.ts` checks them against the running backend. Details and caveats: [Docs/EXPLANATIONS_FEEDBACK.md](Docs/EXPLANATIONS_FEEDBACK.md).

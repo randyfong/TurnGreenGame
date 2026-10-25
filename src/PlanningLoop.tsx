@@ -2,13 +2,14 @@ import {useEffect,useRef} from 'react';
 import {rules,type Session,type Policy,type Turn} from '../shared/types';
 import {investment,planningBudget,runoffReduction,signedArea} from '../shared/planning';
 import {projects} from './campaign';
+import {yearlyFeedback,scienceTopics,type ScienceTopic} from '../shared/science';
 
-export function BudgetHUD({session}:{session:Session}){
+export function BudgetHUD({session,onExplain}:{session:Session;onExplain?:(topic:ScienceTopic,year?:number)=>void}){
  const b=planningBudget(session);
  return <section className="planning-budget" aria-label="Planning budget">
   <div><strong>{session.phase==='complete'?0:rules.budget.annual_limit_coins} 🪙</strong><span>{session.phase==='complete'?'Planning complete':'Available this year'}</span></div>
   <div><strong>{b.spent} / {rules.budget.total_coins}</strong><span>Coins invested so far</span></div>
-  <p>{b.unused} unused from past years · no carryover. Each coin models ${rules.budget.usd_per_coin}.</p>
+  <p>{b.unused} unused from past years · no carryover. Each coin models ${rules.budget.usd_per_coin}. {onExplain&&<button className="why-link" onClick={()=>onExplain('game_rules')}>Budget rules</button>}</p>
  </section>;
 }
 
@@ -25,17 +26,17 @@ export function PlanReview({session,policy,quantity,onCancel,onConfirm}:{session
  </dialog>;
 }
 
-export function AnnualResults({turn}:{turn:Turn}){
+export function AnnualResults({turn,onExplain}:{turn:Turn;onExplain?:(topic:ScienceTopic,year?:number)=>void}){
  const r=turn.result;const dry=turn.dry_season;const runoff=runoffReduction(turn);
  return <section className="annual-results" aria-label={`Year ${turn.year} results`}>
-  <h3>Year {turn.year} results</h3><dl>
-   <div><dt>Spent / unused</dt><dd>{turn.spend_coins} / {turn.unused_allowance} coins</dd></div>
-   <div><dt>Community game score</dt><dd>{r.player_metrics.community_cheer_score}/100</dd></div>
-   {dry&&<><div><dt>Living cover: start → finish</dt><dd>{dry.before_vegetation_pct.toFixed(1)}% → {dry.after_project_vegetation_pct.toFixed(1)}%</dd></div><div><dt>Net living-cover change</dt><dd>{signedArea((dry.after_project_vegetation_pct-dry.before_vegetation_pct)*r.next_state.total_area_hectares/100)}</dd></div></>}
-   <div><dt>Exposed soil at year end</dt><dd>{r.next_state.land_cover.bare_soil_60.toFixed(1)}%</dd></div>
-   <div><dt>Cultivated cover at year end</dt><dd>{r.next_state.land_cover.cropland_40.toFixed(1)}%</dd></div>
-   <div><dt>Project surface cooling</dt><dd>{r.science_payload.invest_urban_cooling.surface_temp_drop_celsius.toFixed(2)}°C</dd></div>
-   <div><dt>Runoff change vs. original village</dt><dd>{runoff===null?'No baseline runoff':`${Math.abs(runoff).toFixed(1)}% ${runoff>=0?'less':'more'}`}</dd></div>
+  <h3>Year {turn.year} results</h3><div className="year-feedback"><h4>What changed, in plain words</h4>{yearlyFeedback(turn).map(item=><p key={item.topic}>{item.text} {onExplain&&<button className="why-link" aria-label={`Explain: ${scienceTopics[item.topic].title}`} onClick={()=>onExplain(item.topic,turn.year)}>Why?</button>}</p>)}</div><dl>
+   <div><dt>{onExplain?<button className="explain-value" onClick={()=>onExplain('game_rules',turn.year)}>Spent / unused <span aria-hidden="true">ⓘ</span></button>:'Spent / unused'}</dt><dd>{turn.spend_coins} / {turn.unused_allowance} coins</dd></div>
+   <div><dt>{onExplain?<button className="explain-value" onClick={()=>onExplain('game_rules',turn.year)}>Community game score <span aria-hidden="true">ⓘ</span></button>:'Community game score'}</dt><dd>{r.player_metrics.community_cheer_score}/100</dd></div>
+   {dry&&<><div><dt>{onExplain?<button className="explain-value" onClick={()=>onExplain('dryland_scenario',turn.year)}>Living cover: start → finish <span aria-hidden="true">ⓘ</span></button>:'Living cover: start → finish'}</dt><dd>{dry.before_vegetation_pct.toFixed(1)}% → {dry.after_project_vegetation_pct.toFixed(1)}%</dd></div><div><dt>{onExplain?<button className="explain-value" onClick={()=>onExplain('dryland_scenario',turn.year)}>Net living-cover change <span aria-hidden="true">ⓘ</span></button>:'Net living-cover change'}</dt><dd>{signedArea((dry.after_project_vegetation_pct-dry.before_vegetation_pct)*r.next_state.total_area_hectares/100)}</dd></div></>}
+   <div><dt>{onExplain?<button className="explain-value" onClick={()=>onExplain('dryland_scenario',turn.year)}>Exposed soil at year end <span aria-hidden="true">ⓘ</span></button>:'Exposed soil at year end'}</dt><dd>{r.next_state.land_cover.bare_soil_60.toFixed(1)}%</dd></div>
+   <div><dt>{onExplain?<button className="explain-value" onClick={()=>onExplain('dryland_scenario',turn.year)}>Cultivated cover at year end <span aria-hidden="true">ⓘ</span></button>:'Cultivated cover at year end'}</dt><dd>{r.next_state.land_cover.cropland_40.toFixed(1)}%</dd></div>
+   <div><dt>{onExplain?<button className="explain-value" onClick={()=>onExplain('invest_urban_cooling',turn.year)}>Project surface cooling <span aria-hidden="true">ⓘ</span></button>:'Project surface cooling'}</dt><dd>{r.science_payload.invest_urban_cooling.surface_temp_drop_celsius.toFixed(2)}°C</dd></div>
+   <div><dt>{onExplain?<button className="explain-value" onClick={()=>onExplain('invest_flood_risk',turn.year)}>Runoff change vs. original village <span aria-hidden="true">ⓘ</span></button>:'Runoff change vs. original village'}</dt><dd>{runoff===null?'No baseline runoff':`${Math.abs(runoff).toFixed(1)}% ${runoff>=0?'less':'more'}`}</dd></div>
   </dl><p className="fine">Land loss uses the educational scenario. Cooling compares the state just before and after the project. The community score is a game score, not a survey.</p>
  </section>;
 }
