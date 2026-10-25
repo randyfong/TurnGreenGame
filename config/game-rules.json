@@ -84,17 +84,17 @@
   "assessment": {
     "minimum": 1,
     "maximum": 5,
-    "minimum_label": "Minimal impact",
-    "maximum_label": "Decisive impact",
+    "minimum_label": "Very little effect",
+    "maximum_label": "Very strong effect",
     "require_explicit_answers": true,
     "questions": [
       {
         "id": "q1_canopy_flooding",
-        "text": "How much impact does neighborhood tree canopy have on local street flooding?"
+        "text": "How much do trees affect flooding on local streets?"
       },
       {
         "id": "q2_pavement_heat",
-        "text": "How much impact does asphalt pavement have on neighborhood heatwaves?"
+        "text": "How much do paved roads and paths affect heat in the village?"
       }
     ]
   },

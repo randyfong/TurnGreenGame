@@ -135,3 +135,7 @@ Use the tool's question breakdown and average normalized gain; do not substitute
 ## Presentation addendum: neighborhood story
 
 [GAMEPLAY_REFRESH.md](GAMEPLAY_REFRESH.md) defines the implemented optional resident requests and badge layer. Investment IDs, costs, annual transactions, profile data, and environmental metric meanings above remain authoritative. Illustrated foregrounds represent dominant land cover; mixed tile backgrounds preserve percentages. Story rewards and weather previews do not change engine state.
+
+## Plain-language update
+
+At the user’s request, both assessment screens now use the same simpler wording from `config/game-rules.json`, with scale labels “Very little effect” and “Very strong effect.” The question identifiers, 1–5 values, and tool calculation are unchanged. Results are headed “How your views changed” and explain the percentage with an example. This wording supersedes the earlier exact display text above.
