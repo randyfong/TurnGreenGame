@@ -1,6 +1,6 @@
 # CoolTown
 
-A lightweight five-year neighborhood climate planning game. The application foundation connects a React interface to the existing local TurnGreen MCP servers through a Node.js backend.
+A lightweight five-year land-restoration game set in a remote dryland village. The application foundation connects a React interface to the existing local TurnGreen MCP servers through a Node.js backend.
 
 ## Run
 
@@ -58,3 +58,7 @@ API routes: `GET /api/config`, `GET /api/health`, `POST /api/sessions` with `pro
 Committed sessions live in backend memory. The browser remembers the session ID, so refresh works while the backend remains running; restarting the backend loses sessions. Durable saves, pending-choice restoration, post-assessment, the science drawer, resolution export, and full gameplay polish belong to the subsequent implementation stages. The completion screen explains which stages are still pending.
 
 Use the reconciled specification as the implementation authority: [Docs/RECONCILED_SPEC.md](Docs/RECONCILED_SPEC.md). Known model discrepancies remain in [Docs/TOOL_VALIDATION.md](Docs/TOOL_VALIDATION.md). These are educational simulation estimates, not local forecasts.
+
+## Dryland village scenario
+
+New sessions apply an explicitly educational vegetation-loss event before each annual cooling/runoff simulation. The village shows exposed soil, cultivated cover, restoration, and a no-project comparison. See [Docs/DRYLAND_VILLAGE.md](Docs/DRYLAND_VILLAGE.md) for assumptions and limits. Run `VALIDATION_OUTPUT=validation/dryland-live.json npm run validate:live` to verify both remote-village profiles.

@@ -1,7 +1,7 @@
 import type {Policy, Turn} from '../shared/types';
 export const projects:Record<Policy,{name:string;icon:string;description:string;strength:string;verb:string}>={
  urban_canopy_trees:{name:'Shade squad',icon:'🌳',description:'Restore shade and living cover on exposed ground.',strength:'Shade + rain capture',verb:'Plant the plan'},
- bioswales:{name:'Sponge streets',icon:'🌼',description:'Catch rainfall and support cover through dry spells.',strength:'Rain capture + future dry-season protection',verb:'Make room for rain'},
+ bioswales:{name:'Rain catchers',icon:'🌼',description:'Catch rainfall and support cover through dry spells.',strength:'Rain capture + future dry-season protection',verb:'Make room for rain'},
  cool_roofs:{name:'Rooftop glow-up',icon:'🏠',description:'Reflect sunshine off bright roofs.',strength:'Cooling only · does not restore soil cover',verb:'Cool those rooftops'}
 };
 export const missions=[

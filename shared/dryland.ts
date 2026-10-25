@@ -1,11 +1,11 @@
 import type {EngineState,LandCover,Turn} from './types';
 /** Educational scenario parameters, not calibrated drought/erosion predictions. */
 export const drySeasons = [
- {title:'The first long dry spell',lossRate:.08,story:'Less rain leaves open ground unprotected. Help your town keep its living cover.'},
+ {title:'The first long dry spell',lossRate:.08,story:'Less rain leaves open ground unprotected. Help your village keep its living cover.'},
  {title:'Rain arrives in short bursts',lossRate:.12,story:'Long dry gaps stress plants. Catching rainfall can support cover through the next dry season.'},
  {title:'A hotter, drier year',lossRate:.18,story:'Plant cover is under pressure. Cool roofs help with heat, but they do not restore exposed soil.'},
  {title:'Wind over exposed ground',lossRate:.22,story:'With less cover, soil is exposed to wind and rain. Rebuild vegetation before more ground is left bare.'},
- {title:'Protect what is growing back',lossRate:.15,story:'A single project does not end land degradation. Keep the town’s recovering ground covered.'}
+ {title:'Protect what is growing back',lossRate:.15,story:'A single project does not end land degradation. Keep the village’s recovering ground covered.'}
 ] as const;
 export const vegetationKeys=['tree_cover_10','shrubland_20','grassland_30','cropland_40'] as const;
 export function livingCover(cover:LandCover){return vegetationKeys.reduce((sum,key)=>sum+cover[key],0);}

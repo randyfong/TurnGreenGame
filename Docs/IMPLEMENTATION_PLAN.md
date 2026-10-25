@@ -1,5 +1,7 @@
 # CoolTown Implementation Plan
 
+> Current setting and land-loss rules: [DRYLAND_VILLAGE.md](DRYLAND_VILLAGE.md) supersedes the earlier urban profile table and story-only degradation treatment. The game now uses a remote-village dryland scenario. Budget and transactional rules are retained.
+
 Based on `DESIGN_PLAN.md` and `PROJECT_SPEC.md`.
 
 ## Goal
