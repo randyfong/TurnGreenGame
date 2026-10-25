@@ -8,7 +8,9 @@ export interface Assessment { q1_canopy_flooding: number; q2_pavement_heat: numb
 export interface Simulation { projects_executed?:ExecutedProject[]; turn: number; intervention: { id: string; budget_allocated: number; budget_capped?: boolean; area_converted_hectares: number }; next_state: EngineState; player_metrics: {community_cheer_score: number; [key:string]: number}; science_payload: {invest_urban_cooling: {surface_temp_drop_celsius: number}; invest_urban_flood: {baseline_runoff_mm: number; post_runoff_mm: number; stormwater_retained_m3: number; incremental_runoff_reduction_m3: number}}; }
 export interface ProjectChoice {policy:Policy;quantity:number;}
 export interface ExecutedProject {intervention_id:Policy;budget_allocated:number;budget_capped?:boolean;area_converted_hectares:number;}
-export interface Turn { projects?:ProjectChoice[]; year:number; request_id:string; policy:Policy; quantity:number; spend_coins:number; unused_allowance:number; dry_season?:DrySeasonImpact; result:Simulation; }
+interface TurnRecord {year:number;request_id:string;spend_coins:number;unused_allowance:number;dry_season?:DrySeasonImpact;result:Simulation;}
+/** Legacy fields are accepted only to read older sessions and callers. New records use projects. */
+export type Turn = TurnRecord & ({projects:ProjectChoice[];policy?:Policy;quantity?:number;} | {projects?:undefined;policy:Policy;quantity:number;});
 export interface Session { id:string; profile_id:string; scenario_version?:'dryland-v1'; phase:'baseline'|'planning'|'complete'; year:number; engine:EngineState; baseline?:Assessment; post_assessment?:Assessment; assessment_result?:AssessmentResult; history:Turn[]; resolution?:import('./resolution').Resolution; }
 export interface TurnInput { year:number; request_id:string; policy?:Policy; quantity?:number; projects?:ProjectChoice[]; }
 export interface ToolGateway { call(server:'simulation'|'science'|'assessment'|'resolution', name:string, args:Record<string,unknown>):Promise<unknown>; close():Promise<void>; }

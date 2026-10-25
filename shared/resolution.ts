@@ -4,7 +4,7 @@ export interface ResolutionDetails {author_name:string;district_name:string;orga
 export interface Resolution {details:ResolutionDetails;created_at:string;metrics:ReturnType<typeof resolutionMetrics>;years:{year:number;policy:string;policies?:string[];coins:number;cooling:number}[];rating_change:number;}
 export function resolutionMetrics(s:Session){
  const last=s.history.at(-1)!;const f=last.result.science_payload.invest_urban_flood;const base=s.engine.baseline_land_cover??rules.profiles.find(p=>p.id===s.profile_id)!.land_cover;
- const ground=s.history.reduce((n,t)=>n+(t.result.projects_executed?t.result.projects_executed.filter(p=>p.intervention_id!=='cool_roofs').reduce((a,p)=>a+p.area_converted_hectares,0):t.policy!=='cool_roofs'?t.result.intervention.area_converted_hectares:0),0);
+ const ground=s.history.reduce((n,t)=>n+(t.result.projects_executed?t.result.projects_executed.filter(p=>p.intervention_id!=='cool_roofs').reduce((a,p)=>a+p.area_converted_hectares,0):turnProjects(t)[0].policy!=='cool_roofs'?t.result.intervention.area_converted_hectares:0),0);
  const net=((base.built_up_50??0)-s.engine.land_cover.built_up_50)*s.engine.total_area_hectares/100;
  return {total_budget_spent:s.history.reduce((n,t)=>n+t.spend_coins*rules.budget.usd_per_coin,0),remaining_budget:s.engine.remaining_budget,total_modeled_retention_m3:f.stormwater_retained_m3,baseline_runoff_reduction_m3:(f.baseline_runoff_mm-f.post_runoff_mm)*s.engine.total_area_hectares*10,net_built_up_reduced_ha:net,ground_depaved_ha:net,total_ground_interventions_ha:ground,rooftop_treated_ha:s.engine.roof_treatment_hectares??0,community_cheer_score:last.result.player_metrics.community_cheer_score};
 }

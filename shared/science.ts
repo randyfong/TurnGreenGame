@@ -1,3 +1,4 @@
+import {turnProjects} from './planning';
 import {rules,type Session} from './types';
 import {drySeasons} from './dryland';
 export const scienceTopics={
@@ -41,8 +42,8 @@ export function turnEvidence(topic:ScienceTopic,session:Session|null,year:number
  if(topic==='invest_urban_cooling')return numericRows(p.invest_urban_cooling,[['prior_hmi','Heat mitigation before project'],['post_hmi','Heat mitigation after project'],['hmi_delta','Heat mitigation change'],['surface_temp_drop_celsius','Project surface cooling (°C)']]);
  if(topic==='invest_flood_risk')return [{label:'Approx. signed runoff reduction vs. original (m³; negative = more runoff)',value:((p.invest_urban_flood.baseline_runoff_mm-p.invest_urban_flood.post_runoff_mm)*r.next_state.total_area_hectares*10).toFixed(1)},...numericRows(p.invest_urban_flood,[['design_storm_depth_mm','Design storm (mm)'],['baseline_runoff_mm','Original village runoff (mm)'],['prior_runoff_mm','Runoff before this project (mm)'],['post_runoff_mm','Runoff after this project (mm)'],['prior_composite_cn','Curve number before project'],['post_composite_cn','Curve number after project'],['stormwater_retained_m3','Total modeled retention (m³)'],['incremental_runoff_reduction_m3','Engine-reported runoff reduction (m³)']])];
  const executed=r.projects_executed?.find(p=>p.intervention_id===topic);
- if(r.projects_executed?!executed:turn.policy!==topic)return [];
- return [{label:'Project committed this year',value:executed?.intervention_id??turn.policy},{label:'Allocated budget',value:`$${executed?.budget_allocated??r.intervention.budget_allocated}`},{label:'Modeled intervention area (may overlap earlier work)',value:`${executed?.area_converted_hectares??r.intervention.area_converted_hectares} ha`},...numericRows(p.invest_urban_cooling,[['surface_temp_drop_celsius','Project surface cooling (°C)']]),...numericRows(p.invest_urban_flood,[['post_composite_cn','Post-project curve number']])];
+ if(r.projects_executed?!executed:!turnProjects(turn).some(p=>p.policy===topic))return [];
+ return [{label:'Project committed this year',value:executed?.intervention_id??turnProjects(turn)[0].policy},{label:'Allocated budget',value:`$${executed?.budget_allocated??r.intervention.budget_allocated}`},{label:'Modeled intervention area (may overlap earlier work)',value:`${executed?.area_converted_hectares??r.intervention.area_converted_hectares} ha`},...numericRows(p.invest_urban_cooling,[['surface_temp_drop_celsius','Project surface cooling (°C)']]),...numericRows(p.invest_urban_flood,[['post_composite_cn','Post-project curve number']])];
 }
 export const scenarioFormula=`Yearly loss rates: ${drySeasons.map(s=>s.lossRate*100+'%').join(', ')}. Susceptibility: trees 0.4; shrubs 0.6; grass and crops 1. Earlier rain-garden coins / 600 reduce loss, capped at 45%. Lost cover moves to exposed soil. These constants are game assumptions, not measured local rates.`;
 export function yearlyFeedback(turn:import('./types').Turn):{text:string;topic:ScienceTopic}[]{

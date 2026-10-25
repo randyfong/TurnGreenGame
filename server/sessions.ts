@@ -35,7 +35,7 @@ export class SessionStore {
     const generated=await this.gateway.call('resolution','generate_youth_resolution',resolutionInput(s,details)) as {author_name?:string;district_name?:string;biophysical_scorecard?:Record<string,unknown>};
     const score=generated?.biophysical_scorecard;
     if(generated?.author_name!==details.author_name||generated.district_name!==details.district_name||!score||['total_modeled_retention_m3','baseline_runoff_reduction_m3','net_built_up_reduced_ha','ground_depaved_ha','total_ground_interventions_ha','rooftop_treated_ha'].some(k=>typeof score[k]!=='number'||Math.abs(Number(score[k])-metrics[k as keyof typeof metrics])>(k.endsWith("_m3")?.51:.011)))throw new RequestError('The document service returned different numbers. Your game is saved; try again.',502);
-    s.resolution={details,created_at:new Date().toISOString(),metrics,years:s.history.map(t=>({year:t.year,policy:t.policy,policies:turnProjects(t).map(p=>p.policy),coins:t.spend_coins,cooling:t.result.science_payload.invest_urban_cooling.surface_temp_drop_celsius})),rating_change:s.assessment_result.learning_gain.average_normalized_gain};
+    s.resolution={details,created_at:new Date().toISOString(),metrics,years:s.history.map(t=>({year:t.year,policy:turnProjects(t)[0].policy,policies:turnProjects(t).map(p=>p.policy),coins:t.spend_coins,cooling:t.result.science_payload.invest_urban_cooling.surface_temp_drop_celsius})),rating_change:s.assessment_result.learning_gain.average_normalized_gain};
     this.commit(s);return structuredClone(s);
   });}
   async post(id:string, answers:Assessment) {return this.locked(id,async()=>{
@@ -70,7 +70,7 @@ export class SessionStore {
     }else result=await this.gateway.call('simulation','simulate_policy_turn',{turn:s.year,intervention_id:normalized[0].policy,budget_allocated:usd,current_state:dry?.state??s.engine}) as Simulation;
     validateSimulation(result,s,usd,normalized[0].policy);
     if(dry){dry.impact.after_project_vegetation_pct=livingCover(result.next_state.land_cover);dry.impact.no_project_vegetation_pct=livingCover(noProjectCover(s.engine.baseline_land_cover as typeof s.engine.land_cover,s.engine.total_area_hectares,s.year));}
-    s.history.push({dry_season:dry?.impact,year:s.year,request_id:input.request_id,projects:input.projects?normalized:undefined,policy:normalized[0].policy,quantity:normalized[0].quantity,spend_coins:spend,unused_allowance:100-spend,result});
+    s.history.push({dry_season:dry?.impact,year:s.year,request_id:input.request_id,projects:normalized,spend_coins:spend,unused_allowance:100-spend,result});
     s.engine=result.next_state; if(s.year===rules.years)s.phase='complete';else s.year++;
     this.commit(s);return structuredClone(s);
   }); }
