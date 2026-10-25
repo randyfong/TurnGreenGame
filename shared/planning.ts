@@ -18,3 +18,22 @@ export function turnProjects(turn:Turn){return turn.projects??[{policy:turn.poli
 export function projectCoins(policy:Policy,quantity:number){return rules.interventions.find(p=>p.id===policy)!.unit_cost_coins*quantity;}
 
 export function turnAllocations(turn:Turn){return turn.projects?turn.projects.map(p=>({...p,coins:projectCoins(p.policy,p.quantity)})):[{policy:turn.policy,quantity:turn.quantity,coins:turn.spend_coins}];}
+
+export type ProjectQuantities=Record<Policy,number>;
+export function selectionBudget(quantities:ProjectQuantities){
+ const limit=rules.budget.annual_limit_coins;
+ const spent=rules.interventions.reduce((sum,p)=>sum+p.unit_cost_coins*quantities[p.id as Policy],0);
+ const valid=Number.isFinite(spent)&&spent<=limit&&rules.interventions.every(p=>Number.isInteger(quantities[p.id as Policy])&&quantities[p.id as Policy]>=0&&quantities[p.id as Policy]<=p.max_units_per_year);
+ return {spent,remaining:limit-spent,limit,valid};
+}
+export function selectionMaximum(quantities:ProjectQuantities,policy:Policy){
+ const p=rules.interventions.find(p=>p.id===policy)!;
+ const otherSpend=rules.interventions.filter(p=>p.id!==policy).reduce((sum,p)=>sum+p.unit_cost_coins*quantities[p.id as Policy],0);
+ return Math.max(0,Math.min(p.max_units_per_year,Math.floor((rules.budget.annual_limit_coins-otherSpend)/p.unit_cost_coins)));
+}
+export function restoreQuantities(raw:unknown):ProjectQuantities{
+ const result:ProjectQuantities={urban_canopy_trees:0,bioswales:0,cool_roofs:0};
+ if(!raw||typeof raw!=='object')return result;
+ for(const p of rules.interventions){const value=(raw as Record<string,unknown>)[p.id];if(typeof value==='number'&&Number.isInteger(value)&&value>=0)result[p.id as Policy]=Math.min(value,selectionMaximum(result,p.id as Policy));}
+ return result;
+}

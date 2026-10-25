@@ -4,10 +4,11 @@ import {investment,turnProjects,planningBudget,runoffReduction,signedArea} from 
 import {projects} from './campaign';
 import {yearlyFeedback,scienceTopics,type ScienceTopic} from '../shared/science';
 
-export function BudgetHUD({session,onExplain}:{session:Session;onExplain?:(topic:ScienceTopic,year?:number)=>void}){
+export function BudgetHUD({session,selectedCoins=0,onExplain}:{session:Session;selectedCoins?:number;onExplain?:(topic:ScienceTopic,year?:number)=>void}){
  const b=planningBudget(session);
  return <section className="planning-budget" aria-label="Planning budget">
-  <div><strong>{session.phase==='complete'?0:rules.budget.annual_limit_coins} 🪙</strong><span>{session.phase==='complete'?'Planning complete':'Available this year'}</span></div>
+  <div><strong>{session.phase==='complete'?0:rules.budget.annual_limit_coins-selectedCoins} 🪙</strong><span>{session.phase==='complete'?'Planning complete':'Coins left this year'}</span></div>
+  <div><strong>{selectedCoins}</strong><span>Selected this year</span></div>
   <div><strong>{b.spent} / {rules.budget.total_coins}</strong><span>Coins invested so far</span></div>
   <p>{b.unused} unused from past years · you cannot spend them later. Each coin models ${rules.budget.usd_per_coin}. {onExplain&&<button className="why-link" onClick={()=>onExplain('game_rules')}>Budget rules</button>}</p>
  </section>;
