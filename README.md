@@ -62,3 +62,5 @@ Use the reconciled specification as the implementation authority: [Docs/RECONCIL
 ## Dryland village scenario
 
 New sessions apply an explicitly educational vegetation-loss event before each annual cooling/runoff simulation. The village shows exposed soil, cultivated cover, restoration, and a no-project comparison. See [Docs/DRYLAND_VILLAGE.md](Docs/DRYLAND_VILLAGE.md) for assumptions and limits. Run `VALIDATION_OUTPUT=validation/dryland-live.json npm run validate:live` to verify both remote-village profiles.
+
+Budget scale: each coin models $10 USD. A 100-coin annual allowance models $1,000; the 500-coin five-year budget models $5,000. Simulation requests use this conversion directly; external model costs and coefficients are unchanged.

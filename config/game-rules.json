@@ -5,7 +5,7 @@
   "budget": {
     "total_coins": 500,
     "annual_limit_coins": 100,
-    "usd_per_coin": 1000,
+    "usd_per_coin": 10,
     "carry_forward": false,
     "policies_per_year": 1,
     "minimum_units": 1

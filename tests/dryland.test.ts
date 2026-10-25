@@ -2,13 +2,13 @@ import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {applyDrySeason,livingCover,noProjectCover} from '../shared/dryland';
 import {rules,type EngineState,type Turn} from '../shared/types';
-const initial=():EngineState=>({land_cover:structuredClone(rules.profiles[0].land_cover),remaining_budget:500000,total_area_hectares:50});
+const initial=():EngineState=>({land_cover:structuredClone(rules.profiles[0].land_cover),remaining_budget:5000,total_area_hectares:50});
 test('dry seasons conserve area while moving vegetation, including crop cover, to bare soil',()=>{
  const s=initial(),original=structuredClone(s);const {state,impact}=applyDrySeason(s,1);
  assert.deepEqual(s,original);assert.ok(livingCover(state.land_cover)<livingCover(s.land_cover));
  assert.ok(state.land_cover.cropland_40<s.land_cover.cropland_40);
  assert.ok(Math.abs(Object.values(state.land_cover).reduce((a,b)=>a+b,0)-100)<1e-9);
- assert.equal(state.land_cover.built_up_50,s.land_cover.built_up_50);assert.equal(state.remaining_budget,500000);
+ assert.equal(state.land_cover.built_up_50,s.land_cover.built_up_50);assert.equal(state.remaining_budget,5000);
  assert.ok(Math.abs((state.land_cover.bare_soil_60-s.land_cover.bare_soil_60)*.5-impact.vegetation_lost_ha)<1e-9);
  assert.deepEqual(state.baseline_land_cover,s.land_cover);
 });

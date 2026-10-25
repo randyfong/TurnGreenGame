@@ -11,7 +11,7 @@ export function VillageLegend() {
   return <section className="village-legend" aria-labelledby="village-legend-title">
     <h3 id="village-legend-title">Map key</h3>
     <ul>{entries.map(([kind, label]) => <li key={kind}>
-      <span className={`legend-picture legend-${kind}`}><TownIcon kind={kind}/></span>
+      <span className={`legend-picture legend-${kind}`}><TownIcon kind={kind} size={34}/></span>
       <span>{label}</span>
     </li>)}</ul>
     <p>Two colors = mixed land. <span aria-hidden="true">🌧️</span> Rain = visual preview only.</p>
