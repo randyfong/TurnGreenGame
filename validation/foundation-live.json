@@ -1,0 +1,1396 @@
+{
+  "captured_at": "2026-10-25T03:55:10.860Z",
+  "scope": "Real local MCP bridge, two synthetic profiles, unit allocations and five-turn chains",
+  "records": [
+    {
+      "profile": "crowded_market",
+      "year": 1,
+      "turn": {
+        "year": 1,
+        "request_id": "live-0",
+        "policy": "urban_canopy_trees",
+        "quantity": 1,
+        "spend_coins": 25,
+        "unused_allowance": 75,
+        "result": {
+          "turn": 1,
+          "intervention": {
+            "id": "urban_canopy_trees",
+            "name": "Street Tree Canopy Expansion",
+            "budget_requested": 25000,
+            "budget_allocated": 25000,
+            "budget_capped": false,
+            "area_converted_hectares": 1.67,
+            "pct_area_converted": 3.33
+          },
+          "next_state": {
+            "total_area_hectares": 50,
+            "remaining_budget": 475000,
+            "roof_treatment_hectares": 0,
+            "baseline_runoff_mm": 26.94,
+            "baseline_land_cover": {
+              "tree_cover_10": 10,
+              "shrubland_20": 0,
+              "grassland_30": 10,
+              "cropland_40": 0,
+              "built_up_50": 75,
+              "bare_soil_60": 5,
+              "water_80": 0
+            },
+            "land_cover": {
+              "tree_cover_10": 13.33,
+              "shrubland_20": 0,
+              "grassland_30": 10,
+              "cropland_40": 0,
+              "built_up_50": 72.67,
+              "bare_soil_60": 4,
+              "water_80": 0
+            }
+          },
+          "player_summary": {
+            "headline": "First steps underway with Street Tree Canopy Expansion.",
+            "youth_takeaway": "New greenery is taking root. Less dark asphalt means the heat starts to back off!",
+            "cooling_stars": 1,
+            "temperature_drop_display": "-0.09°C (-0.16°F)",
+            "water_retention_analogy": "Soaked up 12,573.3 m³ of rain—equivalent to filling 5.0 Olympic swimming pools (or ~41,911 full bathtubs)!",
+            "neighborhood_vibe": "Summer Sun (Starting to Cool Down 🌤️)"
+          },
+          "player_metrics": {
+            "overall_sustainability_score": 44,
+            "cooling_score": 29,
+            "flood_resilience_score": 58,
+            "community_cheer_score": 48,
+            "design_storm_total_retained_m3": 12573.3,
+            "incremental_runoff_reduction_m3": 1045
+          },
+          "science_payload": {
+            "models_referenced": [
+              "Stanford InVEST Urban Cooling Model v3.14 (Heat Mitigation Index)",
+              "Stanford InVEST Urban Flood Risk Mitigation Model (USDA SCS-CN Curve Number)",
+              "ESA WorldCover 10m Land Cover Classification"
+            ],
+            "esa_worldcover_shifts": {
+              "tree_cover_10": {
+                "prior_pct": 10,
+                "post_pct": 13.33,
+                "delta_pct": 3.33
+              },
+              "shrubland_20": {
+                "prior_pct": 0,
+                "post_pct": 0,
+                "delta_pct": 0
+              },
+              "grassland_30": {
+                "prior_pct": 10,
+                "post_pct": 10,
+                "delta_pct": 0
+              },
+              "cropland_40": {
+                "prior_pct": 0,
+                "post_pct": 0,
+                "delta_pct": 0
+              },
+              "built_up_50": {
+                "prior_pct": 75,
+                "post_pct": 72.67,
+                "delta_pct": -2.33
+              },
+              "bare_soil_60": {
+                "prior_pct": 5,
+                "post_pct": 4,
+                "delta_pct": -1
+              },
+              "water_80": {
+                "prior_pct": 0,
+                "post_pct": 0,
+                "delta_pct": 0
+              }
+            },
+            "invest_urban_cooling": {
+              "prior_hmi": 0.1917,
+              "post_hmi": 0.2161,
+              "hmi_delta": 0.0244,
+              "surface_temp_drop_celsius": 0.08999999999999997,
+              "surface_temp_drop_fahrenheit": 0.16,
+              "effective_albedo": {
+                "prior": 0.144,
+                "post": 0.144
+              },
+              "vegetation_fraction": {
+                "prior": 0.2,
+                "post": 0.23
+              },
+              "et_index": {
+                "prior": 0.215,
+                "post": 0.246
+              }
+            },
+            "invest_urban_flood": {
+              "design_storm_depth_mm": 50,
+              "baseline_runoff_mm": 26.94,
+              "prior_composite_cn": 89.9,
+              "post_composite_cn": 88.6,
+              "prior_runoff_mm": 26.94,
+              "post_runoff_mm": 24.85,
+              "retained_runoff_depth_mm": 25.15,
+              "stormwater_retained_m3": 12573.3,
+              "incremental_runoff_reduction_m3": 1045,
+              "retention_efficiency_pct": 50.3
+            }
+          }
+        }
+      }
+    },
+    {
+      "profile": "crowded_market",
+      "year": 2,
+      "turn": {
+        "year": 2,
+        "request_id": "live-1",
+        "policy": "bioswales",
+        "quantity": 1,
+        "spend_coins": 30,
+        "unused_allowance": 70,
+        "result": {
+          "turn": 2,
+          "intervention": {
+            "id": "bioswales",
+            "name": "Rain Gardens & Roadside Bioswales",
+            "budget_requested": 30000,
+            "budget_allocated": 30000,
+            "budget_capped": false,
+            "area_converted_hectares": 2.31,
+            "pct_area_converted": 4.62
+          },
+          "next_state": {
+            "total_area_hectares": 50,
+            "remaining_budget": 445000,
+            "roof_treatment_hectares": 0,
+            "baseline_runoff_mm": 26.94,
+            "baseline_land_cover": {
+              "tree_cover_10": 10,
+              "shrubland_20": 0,
+              "grassland_30": 10,
+              "cropland_40": 0,
+              "built_up_50": 75,
+              "bare_soil_60": 5,
+              "water_80": 0
+            },
+            "land_cover": {
+              "tree_cover_10": 13.33,
+              "shrubland_20": 2.77,
+              "grassland_30": 11.85,
+              "cropland_40": 0,
+              "built_up_50": 68.97,
+              "bare_soil_60": 3.08,
+              "water_80": 0
+            }
+          },
+          "player_summary": {
+            "headline": "Big climate win! Rain Gardens & Roadside Bioswales cools streets and absorbs rain.",
+            "youth_takeaway": "Playgrounds are cooler at noon, and street puddles vanish almost immediately after downpours!",
+            "cooling_stars": 2,
+            "temperature_drop_display": "-0.11°C (-0.20°F)",
+            "water_retention_analogy": "Soaked up 13,585.2 m³ of rain—equivalent to filling 5.4 Olympic swimming pools (or ~45,284 full bathtubs)!",
+            "neighborhood_vibe": "Pleasantly Fresh (Comfortable 🌳)"
+          },
+          "player_metrics": {
+            "overall_sustainability_score": 48,
+            "cooling_score": 33,
+            "flood_resilience_score": 62,
+            "community_cheer_score": 56,
+            "design_storm_total_retained_m3": 13585.2,
+            "incremental_runoff_reduction_m3": 2055
+          },
+          "science_payload": {
+            "models_referenced": [
+              "Stanford InVEST Urban Cooling Model v3.14 (Heat Mitigation Index)",
+              "Stanford InVEST Urban Flood Risk Mitigation Model (USDA SCS-CN Curve Number)",
+              "ESA WorldCover 10m Land Cover Classification"
+            ],
+            "esa_worldcover_shifts": {
+              "tree_cover_10": {
+                "prior_pct": 13.33,
+                "post_pct": 13.33,
+                "delta_pct": 0
+              },
+              "shrubland_20": {
+                "prior_pct": 0,
+                "post_pct": 2.77,
+                "delta_pct": 2.77
+              },
+              "grassland_30": {
+                "prior_pct": 10,
+                "post_pct": 11.85,
+                "delta_pct": 1.85
+              },
+              "cropland_40": {
+                "prior_pct": 0,
+                "post_pct": 0,
+                "delta_pct": 0
+              },
+              "built_up_50": {
+                "prior_pct": 72.67,
+                "post_pct": 68.97,
+                "delta_pct": -3.7
+              },
+              "bare_soil_60": {
+                "prior_pct": 4,
+                "post_pct": 3.08,
+                "delta_pct": -0.92
+              },
+              "water_80": {
+                "prior_pct": 0,
+                "post_pct": 0,
+                "delta_pct": 0
+              }
+            },
+            "invest_urban_cooling": {
+              "prior_hmi": 0.2161,
+              "post_hmi": 0.2445,
+              "hmi_delta": 0.0284,
+              "surface_temp_drop_celsius": 0.1100000000000001,
+              "surface_temp_drop_fahrenheit": 0.2,
+              "effective_albedo": {
+                "prior": 0.144,
+                "post": 0.147
+              },
+              "vegetation_fraction": {
+                "prior": 0.23,
+                "post": 0.266
+              },
+              "et_index": {
+                "prior": 0.246,
+                "post": 0.276
+              }
+            },
+            "invest_urban_flood": {
+              "design_storm_depth_mm": 50,
+              "baseline_runoff_mm": 26.94,
+              "prior_composite_cn": 88.6,
+              "post_composite_cn": 87.3,
+              "prior_runoff_mm": 24.85,
+              "post_runoff_mm": 22.83,
+              "retained_runoff_depth_mm": 27.17,
+              "stormwater_retained_m3": 13585.2,
+              "incremental_runoff_reduction_m3": 2055,
+              "retention_efficiency_pct": 54.3
+            }
+          }
+        }
+      }
+    },
+    {
+      "profile": "crowded_market",
+      "year": 3,
+      "turn": {
+        "year": 3,
+        "request_id": "live-2",
+        "policy": "cool_roofs",
+        "quantity": 1,
+        "spend_coins": 15,
+        "unused_allowance": 85,
+        "result": {
+          "turn": 3,
+          "intervention": {
+            "id": "cool_roofs",
+            "name": "Reflective Cool Roofs & White Pavement",
+            "budget_requested": 15000,
+            "budget_allocated": 15000,
+            "budget_capped": false,
+            "area_converted_hectares": 1.67,
+            "pct_area_converted": 3.33
+          },
+          "next_state": {
+            "total_area_hectares": 50,
+            "remaining_budget": 430000,
+            "roof_treatment_hectares": 1.67,
+            "baseline_runoff_mm": 26.94,
+            "baseline_land_cover": {
+              "tree_cover_10": 10,
+              "shrubland_20": 0,
+              "grassland_30": 10,
+              "cropland_40": 0,
+              "built_up_50": 75,
+              "bare_soil_60": 5,
+              "water_80": 0
+            },
+            "land_cover": {
+              "tree_cover_10": 13.33,
+              "shrubland_20": 2.77,
+              "grassland_30": 11.85,
+              "cropland_40": 0,
+              "built_up_50": 68.97,
+              "bare_soil_60": 3.08,
+              "water_80": 0
+            }
+          },
+          "player_summary": {
+            "headline": "Big climate win! Reflective Cool Roofs & White Pavement cools streets and absorbs rain.",
+            "youth_takeaway": "Playgrounds are cooler at noon, and street puddles vanish almost immediately after downpours!",
+            "cooling_stars": 2,
+            "temperature_drop_display": "-0.01°C (-0.02°F)",
+            "water_retention_analogy": "Soaked up 13,585.2 m³ of rain—equivalent to filling 5.4 Olympic swimming pools (or ~45,284 full bathtubs)!",
+            "neighborhood_vibe": "Pleasantly Fresh (Comfortable 🌳)"
+          },
+          "player_metrics": {
+            "overall_sustainability_score": 48,
+            "cooling_score": 33,
+            "flood_resilience_score": 62,
+            "community_cheer_score": 60,
+            "design_storm_total_retained_m3": 13585.2,
+            "incremental_runoff_reduction_m3": 2055
+          },
+          "science_payload": {
+            "models_referenced": [
+              "Stanford InVEST Urban Cooling Model v3.14 (Heat Mitigation Index)",
+              "Stanford InVEST Urban Flood Risk Mitigation Model (USDA SCS-CN Curve Number)",
+              "ESA WorldCover 10m Land Cover Classification"
+            ],
+            "esa_worldcover_shifts": {
+              "tree_cover_10": {
+                "prior_pct": 13.33,
+                "post_pct": 13.33,
+                "delta_pct": 0
+              },
+              "shrubland_20": {
+                "prior_pct": 2.77,
+                "post_pct": 2.77,
+                "delta_pct": 0
+              },
+              "grassland_30": {
+                "prior_pct": 11.85,
+                "post_pct": 11.85,
+                "delta_pct": 0
+              },
+              "cropland_40": {
+                "prior_pct": 0,
+                "post_pct": 0,
+                "delta_pct": 0
+              },
+              "built_up_50": {
+                "prior_pct": 68.97,
+                "post_pct": 68.97,
+                "delta_pct": 0
+              },
+              "bare_soil_60": {
+                "prior_pct": 3.08,
+                "post_pct": 3.08,
+                "delta_pct": 0
+              },
+              "water_80": {
+                "prior_pct": 0,
+                "post_pct": 0,
+                "delta_pct": 0
+              }
+            },
+            "invest_urban_cooling": {
+              "prior_hmi": 0.2445,
+              "post_hmi": 0.2468,
+              "hmi_delta": 0.0023,
+              "surface_temp_drop_celsius": 0.009999999999999898,
+              "surface_temp_drop_fahrenheit": 0.02,
+              "effective_albedo": {
+                "prior": 0.147,
+                "post": 0.159
+              },
+              "vegetation_fraction": {
+                "prior": 0.266,
+                "post": 0.266
+              },
+              "et_index": {
+                "prior": 0.276,
+                "post": 0.276
+              }
+            },
+            "invest_urban_flood": {
+              "design_storm_depth_mm": 50,
+              "baseline_runoff_mm": 26.94,
+              "prior_composite_cn": 87.3,
+              "post_composite_cn": 87.3,
+              "prior_runoff_mm": 22.83,
+              "post_runoff_mm": 22.83,
+              "retained_runoff_depth_mm": 27.17,
+              "stormwater_retained_m3": 13585.2,
+              "incremental_runoff_reduction_m3": 2055,
+              "retention_efficiency_pct": 54.3
+            }
+          }
+        }
+      }
+    },
+    {
+      "profile": "crowded_market",
+      "year": 4,
+      "turn": {
+        "year": 4,
+        "request_id": "live-3",
+        "policy": "bioswales",
+        "quantity": 3,
+        "spend_coins": 90,
+        "unused_allowance": 10,
+        "result": {
+          "turn": 4,
+          "intervention": {
+            "id": "bioswales",
+            "name": "Rain Gardens & Roadside Bioswales",
+            "budget_requested": 90000,
+            "budget_allocated": 90000,
+            "budget_capped": false,
+            "area_converted_hectares": 6.92,
+            "pct_area_converted": 13.85
+          },
+          "next_state": {
+            "total_area_hectares": 50,
+            "remaining_budget": 340000,
+            "roof_treatment_hectares": 1.67,
+            "baseline_runoff_mm": 26.94,
+            "baseline_land_cover": {
+              "tree_cover_10": 10,
+              "shrubland_20": 0,
+              "grassland_30": 10,
+              "cropland_40": 0,
+              "built_up_50": 75,
+              "bare_soil_60": 5,
+              "water_80": 0
+            },
+            "land_cover": {
+              "tree_cover_10": 13.33,
+              "shrubland_20": 11.08,
+              "grassland_30": 17.39,
+              "cropland_40": 0,
+              "built_up_50": 57.89,
+              "bare_soil_60": 0.31,
+              "water_80": 0
+            }
+          },
+          "player_summary": {
+            "headline": "Big climate win! Rain Gardens & Roadside Bioswales cools streets and absorbs rain.",
+            "youth_takeaway": "Playgrounds are cooler at noon, and street puddles vanish almost immediately after downpours!",
+            "cooling_stars": 2,
+            "temperature_drop_display": "-0.32°C (-0.58°F)",
+            "water_retention_analogy": "Soaked up 16,237.2 m³ of rain—equivalent to filling 6.5 Olympic swimming pools (or ~54,124 full bathtubs)!",
+            "neighborhood_vibe": "Pleasantly Fresh (Comfortable 🌳)"
+          },
+          "player_metrics": {
+            "overall_sustainability_score": 60,
+            "cooling_score": 45,
+            "flood_resilience_score": 75,
+            "community_cheer_score": 76,
+            "design_storm_total_retained_m3": 16237.2,
+            "incremental_runoff_reduction_m3": 4705
+          },
+          "science_payload": {
+            "models_referenced": [
+              "Stanford InVEST Urban Cooling Model v3.14 (Heat Mitigation Index)",
+              "Stanford InVEST Urban Flood Risk Mitigation Model (USDA SCS-CN Curve Number)",
+              "ESA WorldCover 10m Land Cover Classification"
+            ],
+            "esa_worldcover_shifts": {
+              "tree_cover_10": {
+                "prior_pct": 13.33,
+                "post_pct": 13.33,
+                "delta_pct": 0
+              },
+              "shrubland_20": {
+                "prior_pct": 2.77,
+                "post_pct": 11.08,
+                "delta_pct": 8.31
+              },
+              "grassland_30": {
+                "prior_pct": 11.85,
+                "post_pct": 17.39,
+                "delta_pct": 5.54
+              },
+              "cropland_40": {
+                "prior_pct": 0,
+                "post_pct": 0,
+                "delta_pct": 0
+              },
+              "built_up_50": {
+                "prior_pct": 68.97,
+                "post_pct": 57.89,
+                "delta_pct": -11.08
+              },
+              "bare_soil_60": {
+                "prior_pct": 3.08,
+                "post_pct": 0.31,
+                "delta_pct": -2.77
+              },
+              "water_80": {
+                "prior_pct": 0,
+                "post_pct": 0,
+                "delta_pct": 0
+              }
+            },
+            "invest_urban_cooling": {
+              "prior_hmi": 0.2469,
+              "post_hmi": 0.3321,
+              "hmi_delta": 0.0852,
+              "surface_temp_drop_celsius": 0.32000000000000006,
+              "surface_temp_drop_fahrenheit": 0.58,
+              "effective_albedo": {
+                "prior": 0.159,
+                "post": 0.168
+              },
+              "vegetation_fraction": {
+                "prior": 0.266,
+                "post": 0.375
+              },
+              "et_index": {
+                "prior": 0.276,
+                "post": 0.368
+              }
+            },
+            "invest_urban_flood": {
+              "design_storm_depth_mm": 50,
+              "baseline_runoff_mm": 26.94,
+              "prior_composite_cn": 87.3,
+              "post_composite_cn": 83.3,
+              "prior_runoff_mm": 22.83,
+              "post_runoff_mm": 17.53,
+              "retained_runoff_depth_mm": 32.47,
+              "stormwater_retained_m3": 16237.2,
+              "incremental_runoff_reduction_m3": 4705,
+              "retention_efficiency_pct": 64.9
+            }
+          }
+        }
+      }
+    },
+    {
+      "profile": "crowded_market",
+      "year": 5,
+      "turn": {
+        "year": 5,
+        "request_id": "live-4",
+        "policy": "cool_roofs",
+        "quantity": 6,
+        "spend_coins": 90,
+        "unused_allowance": 10,
+        "result": {
+          "turn": 5,
+          "intervention": {
+            "id": "cool_roofs",
+            "name": "Reflective Cool Roofs & White Pavement",
+            "budget_requested": 90000,
+            "budget_allocated": 90000,
+            "budget_capped": false,
+            "area_converted_hectares": 10,
+            "pct_area_converted": 20
+          },
+          "next_state": {
+            "total_area_hectares": 50,
+            "remaining_budget": 250000,
+            "roof_treatment_hectares": 11.67,
+            "baseline_runoff_mm": 26.94,
+            "baseline_land_cover": {
+              "tree_cover_10": 10,
+              "shrubland_20": 0,
+              "grassland_30": 10,
+              "cropland_40": 0,
+              "built_up_50": 75,
+              "bare_soil_60": 5,
+              "water_80": 0
+            },
+            "land_cover": {
+              "tree_cover_10": 13.33,
+              "shrubland_20": 11.08,
+              "grassland_30": 17.39,
+              "cropland_40": 0,
+              "built_up_50": 57.89,
+              "bare_soil_60": 0.31,
+              "water_80": 0
+            }
+          },
+          "player_summary": {
+            "headline": "Big climate win! Reflective Cool Roofs & White Pavement cools streets and absorbs rain.",
+            "youth_takeaway": "Playgrounds are cooler at noon, and street puddles vanish almost immediately after downpours!",
+            "cooling_stars": 2,
+            "temperature_drop_display": "-0.06°C (-0.11°F)",
+            "water_retention_analogy": "Soaked up 16,237.2 m³ of rain—equivalent to filling 6.5 Olympic swimming pools (or ~54,124 full bathtubs)!",
+            "neighborhood_vibe": "Pleasantly Fresh (Comfortable 🌳)"
+          },
+          "player_metrics": {
+            "overall_sustainability_score": 61,
+            "cooling_score": 47,
+            "flood_resilience_score": 75,
+            "community_cheer_score": 81,
+            "design_storm_total_retained_m3": 16237.2,
+            "incremental_runoff_reduction_m3": 4705
+          },
+          "science_payload": {
+            "models_referenced": [
+              "Stanford InVEST Urban Cooling Model v3.14 (Heat Mitigation Index)",
+              "Stanford InVEST Urban Flood Risk Mitigation Model (USDA SCS-CN Curve Number)",
+              "ESA WorldCover 10m Land Cover Classification"
+            ],
+            "esa_worldcover_shifts": {
+              "tree_cover_10": {
+                "prior_pct": 13.33,
+                "post_pct": 13.33,
+                "delta_pct": 0
+              },
+              "shrubland_20": {
+                "prior_pct": 11.08,
+                "post_pct": 11.08,
+                "delta_pct": 0
+              },
+              "grassland_30": {
+                "prior_pct": 17.39,
+                "post_pct": 17.39,
+                "delta_pct": 0
+              },
+              "cropland_40": {
+                "prior_pct": 0,
+                "post_pct": 0,
+                "delta_pct": 0
+              },
+              "built_up_50": {
+                "prior_pct": 57.89,
+                "post_pct": 57.89,
+                "delta_pct": 0
+              },
+              "bare_soil_60": {
+                "prior_pct": 0.31,
+                "post_pct": 0.31,
+                "delta_pct": 0
+              },
+              "water_80": {
+                "prior_pct": 0,
+                "post_pct": 0,
+                "delta_pct": 0
+              }
+            },
+            "invest_urban_cooling": {
+              "prior_hmi": 0.3321,
+              "post_hmi": 0.3461,
+              "hmi_delta": 0.014,
+              "surface_temp_drop_celsius": 0.06000000000000005,
+              "surface_temp_drop_fahrenheit": 0.11,
+              "effective_albedo": {
+                "prior": 0.168,
+                "post": 0.238
+              },
+              "vegetation_fraction": {
+                "prior": 0.375,
+                "post": 0.375
+              },
+              "et_index": {
+                "prior": 0.368,
+                "post": 0.368
+              }
+            },
+            "invest_urban_flood": {
+              "design_storm_depth_mm": 50,
+              "baseline_runoff_mm": 26.94,
+              "prior_composite_cn": 83.3,
+              "post_composite_cn": 83.3,
+              "prior_runoff_mm": 17.53,
+              "post_runoff_mm": 17.53,
+              "retained_runoff_depth_mm": 32.47,
+              "stormwater_retained_m3": 16237.2,
+              "incremental_runoff_reduction_m3": 4705,
+              "retention_efficiency_pct": 64.9
+            }
+          }
+        }
+      }
+    },
+    {
+      "profile": "riverside_valley",
+      "year": 1,
+      "turn": {
+        "year": 1,
+        "request_id": "live-0",
+        "policy": "urban_canopy_trees",
+        "quantity": 1,
+        "spend_coins": 25,
+        "unused_allowance": 75,
+        "result": {
+          "turn": 1,
+          "intervention": {
+            "id": "urban_canopy_trees",
+            "name": "Street Tree Canopy Expansion",
+            "budget_requested": 25000,
+            "budget_allocated": 25000,
+            "budget_capped": false,
+            "area_converted_hectares": 1.67,
+            "pct_area_converted": 3.33
+          },
+          "next_state": {
+            "total_area_hectares": 50,
+            "remaining_budget": 475000,
+            "roof_treatment_hectares": 0,
+            "baseline_runoff_mm": 21.17,
+            "baseline_land_cover": {
+              "tree_cover_10": 10,
+              "shrubland_20": 5,
+              "grassland_30": 15,
+              "cropland_40": 0,
+              "built_up_50": 50,
+              "bare_soil_60": 10,
+              "water_80": 10
+            },
+            "land_cover": {
+              "tree_cover_10": 13.33,
+              "shrubland_20": 5,
+              "grassland_30": 15,
+              "cropland_40": 0,
+              "built_up_50": 47.67,
+              "bare_soil_60": 9,
+              "water_80": 10
+            }
+          },
+          "player_summary": {
+            "headline": "Big climate win! Street Tree Canopy Expansion cools streets and absorbs rain.",
+            "youth_takeaway": "Playgrounds are cooler at noon, and street puddles vanish almost immediately after downpours!",
+            "cooling_stars": 2,
+            "temperature_drop_display": "-0.09°C (-0.16°F)",
+            "water_retention_analogy": "Soaked up 15,273.7 m³ of rain—equivalent to filling 6.1 Olympic swimming pools (or ~50,912 full bathtubs)!",
+            "neighborhood_vibe": "Pleasantly Fresh (Comfortable 🌳)"
+          },
+          "player_metrics": {
+            "overall_sustainability_score": 56,
+            "cooling_score": 41,
+            "flood_resilience_score": 70,
+            "community_cheer_score": 60,
+            "design_storm_total_retained_m3": 15273.7,
+            "incremental_runoff_reduction_m3": 860
+          },
+          "science_payload": {
+            "models_referenced": [
+              "Stanford InVEST Urban Cooling Model v3.14 (Heat Mitigation Index)",
+              "Stanford InVEST Urban Flood Risk Mitigation Model (USDA SCS-CN Curve Number)",
+              "ESA WorldCover 10m Land Cover Classification"
+            ],
+            "esa_worldcover_shifts": {
+              "tree_cover_10": {
+                "prior_pct": 10,
+                "post_pct": 13.33,
+                "delta_pct": 3.33
+              },
+              "shrubland_20": {
+                "prior_pct": 5,
+                "post_pct": 5,
+                "delta_pct": 0
+              },
+              "grassland_30": {
+                "prior_pct": 15,
+                "post_pct": 15,
+                "delta_pct": 0
+              },
+              "cropland_40": {
+                "prior_pct": 0,
+                "post_pct": 0,
+                "delta_pct": 0
+              },
+              "built_up_50": {
+                "prior_pct": 50,
+                "post_pct": 47.67,
+                "delta_pct": -2.33
+              },
+              "bare_soil_60": {
+                "prior_pct": 10,
+                "post_pct": 9,
+                "delta_pct": -1
+              },
+              "water_80": {
+                "prior_pct": 10,
+                "post_pct": 10,
+                "delta_pct": 0
+              }
+            },
+            "invest_urban_cooling": {
+              "prior_hmi": 0.2767,
+              "post_hmi": 0.3011,
+              "hmi_delta": 0.0244,
+              "surface_temp_drop_celsius": 0.08999999999999986,
+              "surface_temp_drop_fahrenheit": 0.16,
+              "effective_albedo": {
+                "prior": 0.153,
+                "post": 0.154
+              },
+              "vegetation_fraction": {
+                "prior": 0.283,
+                "post": 0.313
+              },
+              "et_index": {
+                "prior": 0.383,
+                "post": 0.413
+              }
+            },
+            "invest_urban_flood": {
+              "design_storm_depth_mm": 50,
+              "baseline_runoff_mm": 21.17,
+              "prior_composite_cn": 86.2,
+              "post_composite_cn": 84.9,
+              "prior_runoff_mm": 21.17,
+              "post_runoff_mm": 19.45,
+              "retained_runoff_depth_mm": 30.55,
+              "stormwater_retained_m3": 15273.7,
+              "incremental_runoff_reduction_m3": 860,
+              "retention_efficiency_pct": 61.1
+            }
+          }
+        }
+      }
+    },
+    {
+      "profile": "riverside_valley",
+      "year": 2,
+      "turn": {
+        "year": 2,
+        "request_id": "live-1",
+        "policy": "bioswales",
+        "quantity": 1,
+        "spend_coins": 30,
+        "unused_allowance": 70,
+        "result": {
+          "turn": 2,
+          "intervention": {
+            "id": "bioswales",
+            "name": "Rain Gardens & Roadside Bioswales",
+            "budget_requested": 30000,
+            "budget_allocated": 30000,
+            "budget_capped": false,
+            "area_converted_hectares": 2.31,
+            "pct_area_converted": 4.62
+          },
+          "next_state": {
+            "total_area_hectares": 50,
+            "remaining_budget": 445000,
+            "roof_treatment_hectares": 0,
+            "baseline_runoff_mm": 21.17,
+            "baseline_land_cover": {
+              "tree_cover_10": 10,
+              "shrubland_20": 5,
+              "grassland_30": 15,
+              "cropland_40": 0,
+              "built_up_50": 50,
+              "bare_soil_60": 10,
+              "water_80": 10
+            },
+            "land_cover": {
+              "tree_cover_10": 13.33,
+              "shrubland_20": 7.77,
+              "grassland_30": 16.85,
+              "cropland_40": 0,
+              "built_up_50": 43.97,
+              "bare_soil_60": 8.08,
+              "water_80": 10
+            }
+          },
+          "player_summary": {
+            "headline": "Big climate win! Rain Gardens & Roadside Bioswales cools streets and absorbs rain.",
+            "youth_takeaway": "Playgrounds are cooler at noon, and street puddles vanish almost immediately after downpours!",
+            "cooling_stars": 2,
+            "temperature_drop_display": "-0.11°C (-0.20°F)",
+            "water_retention_analogy": "Soaked up 16,108.9 m³ of rain—equivalent to filling 6.4 Olympic swimming pools (or ~53,696 full bathtubs)!",
+            "neighborhood_vibe": "Pleasantly Fresh (Comfortable 🌳)"
+          },
+          "player_metrics": {
+            "overall_sustainability_score": 59,
+            "cooling_score": 44,
+            "flood_resilience_score": 74,
+            "community_cheer_score": 67,
+            "design_storm_total_retained_m3": 16108.9,
+            "incremental_runoff_reduction_m3": 1695
+          },
+          "science_payload": {
+            "models_referenced": [
+              "Stanford InVEST Urban Cooling Model v3.14 (Heat Mitigation Index)",
+              "Stanford InVEST Urban Flood Risk Mitigation Model (USDA SCS-CN Curve Number)",
+              "ESA WorldCover 10m Land Cover Classification"
+            ],
+            "esa_worldcover_shifts": {
+              "tree_cover_10": {
+                "prior_pct": 13.33,
+                "post_pct": 13.33,
+                "delta_pct": 0
+              },
+              "shrubland_20": {
+                "prior_pct": 5,
+                "post_pct": 7.77,
+                "delta_pct": 2.77
+              },
+              "grassland_30": {
+                "prior_pct": 15,
+                "post_pct": 16.85,
+                "delta_pct": 1.85
+              },
+              "cropland_40": {
+                "prior_pct": 0,
+                "post_pct": 0,
+                "delta_pct": 0
+              },
+              "built_up_50": {
+                "prior_pct": 47.67,
+                "post_pct": 43.97,
+                "delta_pct": -3.7
+              },
+              "bare_soil_60": {
+                "prior_pct": 9,
+                "post_pct": 8.08,
+                "delta_pct": -0.92
+              },
+              "water_80": {
+                "prior_pct": 10,
+                "post_pct": 10,
+                "delta_pct": 0
+              }
+            },
+            "invest_urban_cooling": {
+              "prior_hmi": 0.3011,
+              "post_hmi": 0.3295,
+              "hmi_delta": 0.0284,
+              "surface_temp_drop_celsius": 0.1100000000000001,
+              "surface_temp_drop_fahrenheit": 0.2,
+              "effective_albedo": {
+                "prior": 0.154,
+                "post": 0.157
+              },
+              "vegetation_fraction": {
+                "prior": 0.313,
+                "post": 0.349
+              },
+              "et_index": {
+                "prior": 0.413,
+                "post": 0.444
+              }
+            },
+            "invest_urban_flood": {
+              "design_storm_depth_mm": 50,
+              "baseline_runoff_mm": 21.17,
+              "prior_composite_cn": 84.9,
+              "post_composite_cn": 83.6,
+              "prior_runoff_mm": 19.45,
+              "post_runoff_mm": 17.78,
+              "retained_runoff_depth_mm": 32.22,
+              "stormwater_retained_m3": 16108.9,
+              "incremental_runoff_reduction_m3": 1695,
+              "retention_efficiency_pct": 64.4
+            }
+          }
+        }
+      }
+    },
+    {
+      "profile": "riverside_valley",
+      "year": 3,
+      "turn": {
+        "year": 3,
+        "request_id": "live-2",
+        "policy": "cool_roofs",
+        "quantity": 1,
+        "spend_coins": 15,
+        "unused_allowance": 85,
+        "result": {
+          "turn": 3,
+          "intervention": {
+            "id": "cool_roofs",
+            "name": "Reflective Cool Roofs & White Pavement",
+            "budget_requested": 15000,
+            "budget_allocated": 15000,
+            "budget_capped": false,
+            "area_converted_hectares": 1.67,
+            "pct_area_converted": 3.33
+          },
+          "next_state": {
+            "total_area_hectares": 50,
+            "remaining_budget": 430000,
+            "roof_treatment_hectares": 1.67,
+            "baseline_runoff_mm": 21.17,
+            "baseline_land_cover": {
+              "tree_cover_10": 10,
+              "shrubland_20": 5,
+              "grassland_30": 15,
+              "cropland_40": 0,
+              "built_up_50": 50,
+              "bare_soil_60": 10,
+              "water_80": 10
+            },
+            "land_cover": {
+              "tree_cover_10": 13.33,
+              "shrubland_20": 7.77,
+              "grassland_30": 16.85,
+              "cropland_40": 0,
+              "built_up_50": 43.97,
+              "bare_soil_60": 8.08,
+              "water_80": 10
+            }
+          },
+          "player_summary": {
+            "headline": "Big climate win! Reflective Cool Roofs & White Pavement cools streets and absorbs rain.",
+            "youth_takeaway": "Playgrounds are cooler at noon, and street puddles vanish almost immediately after downpours!",
+            "cooling_stars": 2,
+            "temperature_drop_display": "-0.01°C (-0.02°F)",
+            "water_retention_analogy": "Soaked up 16,108.9 m³ of rain—equivalent to filling 6.4 Olympic swimming pools (or ~53,696 full bathtubs)!",
+            "neighborhood_vibe": "Pleasantly Fresh (Comfortable 🌳)"
+          },
+          "player_metrics": {
+            "overall_sustainability_score": 60,
+            "cooling_score": 45,
+            "flood_resilience_score": 74,
+            "community_cheer_score": 72,
+            "design_storm_total_retained_m3": 16108.9,
+            "incremental_runoff_reduction_m3": 1695
+          },
+          "science_payload": {
+            "models_referenced": [
+              "Stanford InVEST Urban Cooling Model v3.14 (Heat Mitigation Index)",
+              "Stanford InVEST Urban Flood Risk Mitigation Model (USDA SCS-CN Curve Number)",
+              "ESA WorldCover 10m Land Cover Classification"
+            ],
+            "esa_worldcover_shifts": {
+              "tree_cover_10": {
+                "prior_pct": 13.33,
+                "post_pct": 13.33,
+                "delta_pct": 0
+              },
+              "shrubland_20": {
+                "prior_pct": 7.77,
+                "post_pct": 7.77,
+                "delta_pct": 0
+              },
+              "grassland_30": {
+                "prior_pct": 16.85,
+                "post_pct": 16.85,
+                "delta_pct": 0
+              },
+              "cropland_40": {
+                "prior_pct": 0,
+                "post_pct": 0,
+                "delta_pct": 0
+              },
+              "built_up_50": {
+                "prior_pct": 43.97,
+                "post_pct": 43.97,
+                "delta_pct": 0
+              },
+              "bare_soil_60": {
+                "prior_pct": 8.08,
+                "post_pct": 8.08,
+                "delta_pct": 0
+              },
+              "water_80": {
+                "prior_pct": 10,
+                "post_pct": 10,
+                "delta_pct": 0
+              }
+            },
+            "invest_urban_cooling": {
+              "prior_hmi": 0.3295,
+              "post_hmi": 0.3318,
+              "hmi_delta": 0.0023,
+              "surface_temp_drop_celsius": 0.010000000000000009,
+              "surface_temp_drop_fahrenheit": 0.02,
+              "effective_albedo": {
+                "prior": 0.157,
+                "post": 0.169
+              },
+              "vegetation_fraction": {
+                "prior": 0.349,
+                "post": 0.349
+              },
+              "et_index": {
+                "prior": 0.444,
+                "post": 0.444
+              }
+            },
+            "invest_urban_flood": {
+              "design_storm_depth_mm": 50,
+              "baseline_runoff_mm": 21.17,
+              "prior_composite_cn": 83.6,
+              "post_composite_cn": 83.6,
+              "prior_runoff_mm": 17.78,
+              "post_runoff_mm": 17.78,
+              "retained_runoff_depth_mm": 32.22,
+              "stormwater_retained_m3": 16108.9,
+              "incremental_runoff_reduction_m3": 1695,
+              "retention_efficiency_pct": 64.4
+            }
+          }
+        }
+      }
+    },
+    {
+      "profile": "riverside_valley",
+      "year": 4,
+      "turn": {
+        "year": 4,
+        "request_id": "live-3",
+        "policy": "bioswales",
+        "quantity": 3,
+        "spend_coins": 90,
+        "unused_allowance": 10,
+        "result": {
+          "turn": 4,
+          "intervention": {
+            "id": "bioswales",
+            "name": "Rain Gardens & Roadside Bioswales",
+            "budget_requested": 90000,
+            "budget_allocated": 90000,
+            "budget_capped": false,
+            "area_converted_hectares": 6.92,
+            "pct_area_converted": 13.85
+          },
+          "next_state": {
+            "total_area_hectares": 50,
+            "remaining_budget": 340000,
+            "roof_treatment_hectares": 1.67,
+            "baseline_runoff_mm": 21.17,
+            "baseline_land_cover": {
+              "tree_cover_10": 10,
+              "shrubland_20": 5,
+              "grassland_30": 15,
+              "cropland_40": 0,
+              "built_up_50": 50,
+              "bare_soil_60": 10,
+              "water_80": 10
+            },
+            "land_cover": {
+              "tree_cover_10": 13.33,
+              "shrubland_20": 16.08,
+              "grassland_30": 22.39,
+              "cropland_40": 0,
+              "built_up_50": 32.89,
+              "bare_soil_60": 5.31,
+              "water_80": 10
+            }
+          },
+          "player_summary": {
+            "headline": "Big climate win! Rain Gardens & Roadside Bioswales cools streets and absorbs rain.",
+            "youth_takeaway": "Playgrounds are cooler at noon, and street puddles vanish almost immediately after downpours!",
+            "cooling_stars": 3,
+            "temperature_drop_display": "-0.32°C (-0.58°F)",
+            "water_retention_analogy": "Soaked up 18,303.6 m³ of rain—equivalent to filling 7.3 Olympic swimming pools (or ~61,012 full bathtubs)!",
+            "neighborhood_vibe": "Pleasantly Fresh (Comfortable 🌳)"
+          },
+          "player_metrics": {
+            "overall_sustainability_score": 70,
+            "cooling_score": 56,
+            "flood_resilience_score": 84,
+            "community_cheer_score": 86,
+            "design_storm_total_retained_m3": 18303.6,
+            "incremental_runoff_reduction_m3": 3890
+          },
+          "science_payload": {
+            "models_referenced": [
+              "Stanford InVEST Urban Cooling Model v3.14 (Heat Mitigation Index)",
+              "Stanford InVEST Urban Flood Risk Mitigation Model (USDA SCS-CN Curve Number)",
+              "ESA WorldCover 10m Land Cover Classification"
+            ],
+            "esa_worldcover_shifts": {
+              "tree_cover_10": {
+                "prior_pct": 13.33,
+                "post_pct": 13.33,
+                "delta_pct": 0
+              },
+              "shrubland_20": {
+                "prior_pct": 7.77,
+                "post_pct": 16.08,
+                "delta_pct": 8.31
+              },
+              "grassland_30": {
+                "prior_pct": 16.85,
+                "post_pct": 22.39,
+                "delta_pct": 5.54
+              },
+              "cropland_40": {
+                "prior_pct": 0,
+                "post_pct": 0,
+                "delta_pct": 0
+              },
+              "built_up_50": {
+                "prior_pct": 43.97,
+                "post_pct": 32.89,
+                "delta_pct": -11.08
+              },
+              "bare_soil_60": {
+                "prior_pct": 8.08,
+                "post_pct": 5.31,
+                "delta_pct": -2.77
+              },
+              "water_80": {
+                "prior_pct": 10,
+                "post_pct": 10,
+                "delta_pct": 0
+              }
+            },
+            "invest_urban_cooling": {
+              "prior_hmi": 0.3319,
+              "post_hmi": 0.4171,
+              "hmi_delta": 0.0852,
+              "surface_temp_drop_celsius": 0.32000000000000006,
+              "surface_temp_drop_fahrenheit": 0.58,
+              "effective_albedo": {
+                "prior": 0.169,
+                "post": 0.178
+              },
+              "vegetation_fraction": {
+                "prior": 0.349,
+                "post": 0.457
+              },
+              "et_index": {
+                "prior": 0.444,
+                "post": 0.535
+              }
+            },
+            "invest_urban_flood": {
+              "design_storm_depth_mm": 50,
+              "baseline_runoff_mm": 21.17,
+              "prior_composite_cn": 83.6,
+              "post_composite_cn": 79.6,
+              "prior_runoff_mm": 17.78,
+              "post_runoff_mm": 13.39,
+              "retained_runoff_depth_mm": 36.61,
+              "stormwater_retained_m3": 18303.6,
+              "incremental_runoff_reduction_m3": 3890,
+              "retention_efficiency_pct": 73.2
+            }
+          }
+        }
+      }
+    },
+    {
+      "profile": "riverside_valley",
+      "year": 5,
+      "turn": {
+        "year": 5,
+        "request_id": "live-4",
+        "policy": "cool_roofs",
+        "quantity": 6,
+        "spend_coins": 90,
+        "unused_allowance": 10,
+        "result": {
+          "turn": 5,
+          "intervention": {
+            "id": "cool_roofs",
+            "name": "Reflective Cool Roofs & White Pavement",
+            "budget_requested": 90000,
+            "budget_allocated": 90000,
+            "budget_capped": false,
+            "area_converted_hectares": 10,
+            "pct_area_converted": 20
+          },
+          "next_state": {
+            "total_area_hectares": 50,
+            "remaining_budget": 250000,
+            "roof_treatment_hectares": 11.67,
+            "baseline_runoff_mm": 21.17,
+            "baseline_land_cover": {
+              "tree_cover_10": 10,
+              "shrubland_20": 5,
+              "grassland_30": 15,
+              "cropland_40": 0,
+              "built_up_50": 50,
+              "bare_soil_60": 10,
+              "water_80": 10
+            },
+            "land_cover": {
+              "tree_cover_10": 13.33,
+              "shrubland_20": 16.08,
+              "grassland_30": 22.39,
+              "cropland_40": 0,
+              "built_up_50": 32.89,
+              "bare_soil_60": 5.31,
+              "water_80": 10
+            }
+          },
+          "player_summary": {
+            "headline": "Big climate win! Reflective Cool Roofs & White Pavement cools streets and absorbs rain.",
+            "youth_takeaway": "Playgrounds are cooler at noon, and street puddles vanish almost immediately after downpours!",
+            "cooling_stars": 3,
+            "temperature_drop_display": "-0.06°C (-0.11°F)",
+            "water_retention_analogy": "Soaked up 18,303.6 m³ of rain—equivalent to filling 7.3 Olympic swimming pools (or ~61,012 full bathtubs)!",
+            "neighborhood_vibe": "Pleasantly Fresh (Comfortable 🌳)"
+          },
+          "player_metrics": {
+            "overall_sustainability_score": 71,
+            "cooling_score": 58,
+            "flood_resilience_score": 84,
+            "community_cheer_score": 91,
+            "design_storm_total_retained_m3": 18303.6,
+            "incremental_runoff_reduction_m3": 3890
+          },
+          "science_payload": {
+            "models_referenced": [
+              "Stanford InVEST Urban Cooling Model v3.14 (Heat Mitigation Index)",
+              "Stanford InVEST Urban Flood Risk Mitigation Model (USDA SCS-CN Curve Number)",
+              "ESA WorldCover 10m Land Cover Classification"
+            ],
+            "esa_worldcover_shifts": {
+              "tree_cover_10": {
+                "prior_pct": 13.33,
+                "post_pct": 13.33,
+                "delta_pct": 0
+              },
+              "shrubland_20": {
+                "prior_pct": 16.08,
+                "post_pct": 16.08,
+                "delta_pct": 0
+              },
+              "grassland_30": {
+                "prior_pct": 22.39,
+                "post_pct": 22.39,
+                "delta_pct": 0
+              },
+              "cropland_40": {
+                "prior_pct": 0,
+                "post_pct": 0,
+                "delta_pct": 0
+              },
+              "built_up_50": {
+                "prior_pct": 32.89,
+                "post_pct": 32.89,
+                "delta_pct": 0
+              },
+              "bare_soil_60": {
+                "prior_pct": 5.31,
+                "post_pct": 5.31,
+                "delta_pct": 0
+              },
+              "water_80": {
+                "prior_pct": 10,
+                "post_pct": 10,
+                "delta_pct": 0
+              }
+            },
+            "invest_urban_cooling": {
+              "prior_hmi": 0.4171,
+              "post_hmi": 0.4311,
+              "hmi_delta": 0.014,
+              "surface_temp_drop_celsius": 0.05999999999999983,
+              "surface_temp_drop_fahrenheit": 0.11,
+              "effective_albedo": {
+                "prior": 0.178,
+                "post": 0.248
+              },
+              "vegetation_fraction": {
+                "prior": 0.457,
+                "post": 0.457
+              },
+              "et_index": {
+                "prior": 0.535,
+                "post": 0.535
+              }
+            },
+            "invest_urban_flood": {
+              "design_storm_depth_mm": 50,
+              "baseline_runoff_mm": 21.17,
+              "prior_composite_cn": 79.6,
+              "post_composite_cn": 79.6,
+              "prior_runoff_mm": 13.39,
+              "post_runoff_mm": 13.39,
+              "retained_runoff_depth_mm": 36.61,
+              "stormwater_retained_m3": 18303.6,
+              "incremental_runoff_reduction_m3": 3890,
+              "retention_efficiency_pct": 73.2
+            }
+          }
+        }
+      }
+    }
+  ]
+}

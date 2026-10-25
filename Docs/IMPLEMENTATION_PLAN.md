@@ -18,6 +18,8 @@ Keep game rules and session history separate from React rendering. The backend v
 
 **Step 1 executed (October 24, 2026):** All four required tools returned structured results for a sample session. Live revalidation confirms fixes to assessment edge cases and roof persistence. Integration remains conditional on the remaining findings documented in [TOOL_VALIDATION.md](TOOL_VALIDATION.md). Captured live responses and a repeatable fixture check are in `../validation/`.
 
+**Step 3 implemented (October 24, 2026):** React/TypeScript/Vite scaffold, Node MCP bridge, typed state, both profiles, guarded annual transactions, and baseline integration are working. Both profiles completed five live turns with unit-sized allocations. See [FOUNDATION_VALIDATION.md](FOUNDATION_VALIDATION.md) and [run instructions](../README.md). Durable saves and later game surfaces remain in their planned stages.
+
 | Step | Work | Completion check |
 | :--- | :--- | :--- |
 | **1. Validate the existing tools** | Exercise simulation, science, assessment, and resolution generation with a sample session. Capture actual response shapes and errors. | All four tools return usable structured results. |
@@ -45,6 +47,10 @@ Keep game rules and session history separate from React rendering. The backend v
 | Resolution | Explicit water/land overrides and a controlled print template; omit unsupported generated claims. |
 
 Step 3 must validate unit-sized allocations and the new riverside profile before enabling these controls. Existing server continuity findings remain documented in [TOOL_VALIDATION.md](TOOL_VALIDATION.md).
+
+## Engagement Update
+
+Resident requests, five collectible badges, illustrated town tiles, project cards, a coin meter, year-end reveals, a story journal, and a block-party finale are implemented. This advances the planning-loop presentation while retaining the reconciled simulation and budget rules. See [GAMEPLAY_REFRESH.md](GAMEPLAY_REFRESH.md) for reward rules and playtest results. Steps 5–8 still include their remaining science, assessment, recovery, export, and broader QA work.
 
 ## Gameplay and Interface
 

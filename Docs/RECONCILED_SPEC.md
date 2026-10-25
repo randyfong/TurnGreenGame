@@ -129,3 +129,7 @@ Use the tool's question breakdown and average normalized gain; do not substitute
 | Summed water/land/cooling outputs | Explicit water/land overrides; yearly cooling only until continuity is resolved. |
 | Live platform downloads versus zero-auth cached game | Synthetic baselines and local MCP outputs; no runtime GIS credentials or live tile dependency. |
 | Single FastMCP architecture diagram | Four configured MCP processes behind one application backend. |
+
+## Presentation addendum: neighborhood story
+
+[GAMEPLAY_REFRESH.md](GAMEPLAY_REFRESH.md) defines the implemented optional resident requests and badge layer. Investment IDs, costs, annual transactions, profile data, and environmental metric meanings above remain authoritative. Illustrated foregrounds represent dominant land cover; mixed tile backgrounds preserve percentages. Story rewards and weather previews do not change engine state.
