@@ -7,7 +7,16 @@ import {LandMetricIcon} from './LandMetricIcon';
 import {drySeasons,livingCover,applyDrySeason} from '../shared/dryland';
 import {projects,missions,missionWon,earnedBadges} from './campaign';
 import './style.css?v=dryland-village';
-async function api<T>(path:string,body?:unknown):Promise<T>{const r=await fetch('/api'+path,{method:body===undefined?'GET':'POST',headers:{'Content-Type':'application/json'},body:body===undefined?undefined:JSON.stringify(body)});const data=await r.json();if(!r.ok)throw Error(data.error??'Could not reach the game. Retry your request.');return data;}
+class ApiError extends Error { constructor(message:string,public status?:number){super(message);} }
+async function api<T>(path:string,body?:unknown):Promise<T>{
+ let r:Response;
+ try { r=await fetch('/api'+path,{method:body===undefined?'GET':'POST',headers:{'Content-Type':'application/json'},body:body===undefined?undefined:JSON.stringify(body)}); }
+ catch { throw new ApiError('The local game server is offline or unreachable. Restart it, then try again.'); }
+ let data;
+ try { data=await r.json(); } catch { throw new ApiError('The game server returned an unreadable response. Reload the page and try again.',r.status); }
+ if(!r.ok)throw new ApiError(data.error??'The game request failed. Try again.',r.status);
+ return data;
+}
 function YearReveal({turn,history,onClose}:{turn:Turn;history:Turn[];onClose:()=>void}){
  const ref=useRef<HTMLDialogElement>(null);const m=missions[turn.year-1];const won=missionWon(turn,history);const r=turn.result;const cooling=r.science_payload.invest_urban_cooling.surface_temp_drop_celsius;
  useEffect(()=>{ref.current?.showModal();},[]);
@@ -16,7 +25,7 @@ function YearReveal({turn,history,onClose}:{turn:Turn;history:Turn[];onClose:()=
 function App(){
  const nextHeading=useRef<HTMLHeadingElement>(null);
  const [session,setSession]=useState<Session|null>(null),[profile,setProfile]=useState(rules.profiles[0].id),[policy,setPolicy]=useState<Policy>('urban_canopy_trees'),[quantity,setQuantity]=useState(1),[answers,setAnswers]=useState<Partial<Assessment>>({}),[busy,setBusy]=useState(false),[error,setError]=useState(''),[inspect,setInspect]=useState(''),[pending,setPending]=useState<TurnInput|null>(null),[weather,setWeather]=useState<'sun'|'rain'>('sun'),[reveal,setReveal]=useState<Turn|null>(null);
- useEffect(()=>{const id=localStorage.getItem('cooltown-session');if(id){api<Session>('/sessions/'+id).then(s=>{setSession(s);setProfile(s.profile_id);}).catch(()=>{localStorage.removeItem('cooltown-session');setError('Your previous session is no longer available. Choose a neighborhood to start again.');});}},[]);
+ useEffect(()=>{const id=localStorage.getItem('cooltown-session');if(id){api<Session>('/sessions/'+id).then(s=>{setSession(s);setProfile(s.profile_id);}).catch(e=>{if(e instanceof ApiError&&e.status===404){localStorage.removeItem('cooltown-session');setError('Your previous session is no longer available. Choose a village to start again.');}else{setError(e instanceof Error?e.message:'Could not reconnect to your village. Try again.');}});}},[]);
  async function act(work:()=>Promise<void>){setBusy(true);setError('');try{await work();}catch(e){setError(e instanceof Error?e.message:'Request failed. Try again.');}finally{setBusy(false);}}
  const selected=rules.interventions.find(p=>p.id===policy)!;const current=rules.profiles.find(p=>p.id===(session?.profile_id??profile))!;const cover=session?.engine.land_cover??current.land_cover;const last=session?.history.at(-1)?.result;const f=last?.science_payload.invest_urban_flood;const reduction=f&&f.baseline_runoff_mm>0?(f.baseline_runoff_mm-f.post_runoff_mm)/f.baseline_runoff_mm*100:null;const year=session?.year??1;const mission=missions[year-1];const badges=earnedBadges(session?.history??[]);const spend=selected.unit_cost_coins*quantity;
  const completed=session?.phase==='complete';
