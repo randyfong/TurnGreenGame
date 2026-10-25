@@ -1,6 +1,6 @@
 import {useEffect,useRef} from 'react';
 import {rules,type Session,type Policy,type Turn,type ProjectChoice} from '../shared/types';
-import {investment,turnProjects,planningBudget,runoffReduction,signedArea} from '../shared/planning';
+import {investment,turnProjects,turnAllocations,yearlyEffects,planningBudget,runoffReduction,signedArea} from '../shared/planning';
 import {projects} from './campaign';
 import {yearlyFeedback,scienceTopics,type ScienceTopic} from '../shared/science';
 
@@ -28,17 +28,19 @@ export function PlanReview({session,choices,onCancel,onConfirm}:{session:Session
 }
 
 export function AnnualResults({turn,onExplain}:{turn:Turn;onExplain?:(topic:ScienceTopic,year?:number)=>void}){
- const r=turn.result;const dry=turn.dry_season;const runoff=runoffReduction(turn);
+ const r=turn.result;const dry=turn.dry_season;const runoff=runoffReduction(turn);const effects=yearlyEffects(turn);
  return <section className="annual-results" aria-label={`Year ${turn.year} results`}>
-  <h3>Year {turn.year} results</h3><div className="year-feedback"><h4>What changed, in plain words</h4>{yearlyFeedback(turn).map(item=><p key={item.topic}>{item.text} {onExplain&&<button className="why-link" aria-label={`Explain: ${scienceTopics[item.topic].title}`} onClick={()=>onExplain(item.topic,turn.year)}>Why?</button>}</p>)}</div><dl>
+  <h3>Year {turn.year} combined results</h3><ul className="year-project-list" aria-label="Projects completed this year">{turnAllocations(turn).map(p=><li key={p.policy}><span>{projects[p.policy].icon} {projects[p.policy].name} · {p.quantity} {p.quantity===1?'unit':'units'} · {p.coins} coins</span>{onExplain&&<button className="why-link" onClick={()=>onExplain(p.policy,turn.year)}>Why?</button>}</li>)}</ul><div className="year-feedback"><h4>What changed, in plain words</h4>{yearlyFeedback(turn).map(item=><p key={item.topic}>{item.text} {onExplain&&<button className="why-link" aria-label={`Explain: ${scienceTopics[item.topic].title}`} onClick={()=>onExplain(item.topic,turn.year)}>Why?</button>}</p>)}</div><dl>
    <div><dt>{onExplain?<button className="explain-value" onClick={()=>onExplain('game_rules',turn.year)}>Spent / unused <span aria-hidden="true">ⓘ</span></button>:'Spent / unused'}</dt><dd>{turn.spend_coins} / {turn.unused_allowance} coins</dd></div>
    <div><dt>{onExplain?<button className="explain-value" onClick={()=>onExplain('game_rules',turn.year)}>Community game score <span aria-hidden="true">ⓘ</span></button>:'Community game score'}</dt><dd>{r.player_metrics.community_cheer_score}/100</dd></div>
    {dry&&<><div><dt>{onExplain?<button className="explain-value" onClick={()=>onExplain('dryland_scenario',turn.year)}>Land covered by plants: start → end <span aria-hidden="true">ⓘ</span></button>:'Land covered by plants: start → end'}</dt><dd>{dry.before_vegetation_pct.toFixed(1)}% → {dry.after_project_vegetation_pct.toFixed(1)}%</dd></div><div><dt>{onExplain?<button className="explain-value" onClick={()=>onExplain('dryland_scenario',turn.year)}>Plant-covered land gained or lost <span aria-hidden="true">ⓘ</span></button>:'Plant-covered land gained or lost'}</dt><dd>{signedArea((dry.after_project_vegetation_pct-dry.before_vegetation_pct)*r.next_state.total_area_hectares/100)}</dd></div></>}
    <div><dt>{onExplain?<button className="explain-value" onClick={()=>onExplain('dryland_scenario',turn.year)}>Exposed soil at year end <span aria-hidden="true">ⓘ</span></button>:'Exposed soil at year end'}</dt><dd>{r.next_state.land_cover.bare_soil_60.toFixed(1)}%</dd></div>
    <div><dt>{onExplain?<button className="explain-value" onClick={()=>onExplain('dryland_scenario',turn.year)}>Land used to grow crops at year end <span aria-hidden="true">ⓘ</span></button>:'Land used to grow crops at year end'}</dt><dd>{r.next_state.land_cover.cropland_40.toFixed(1)}%</dd></div>
-   <div><dt>{onExplain?<button className="explain-value" onClick={()=>onExplain('invest_urban_cooling',turn.year)}>Ground cooling from this project <span aria-hidden="true">ⓘ</span></button>:'Ground cooling from this project'}</dt><dd>{r.science_payload.invest_urban_cooling.surface_temp_drop_celsius.toFixed(2)}°C</dd></div>
+   <div><dt>{onExplain?<button className="explain-value" onClick={()=>onExplain('invest_urban_cooling',turn.year)}>Combined ground cooling this year <span aria-hidden="true">ⓘ</span></button>:'Combined ground cooling this year'}</dt><dd>{effects.cooling.toFixed(2)}°C</dd></div>
    <div><dt>{onExplain?<button className="explain-value" onClick={()=>onExplain('invest_flood_risk',turn.year)}>Rainwater flowing away vs. the start <span aria-hidden="true">ⓘ</span></button>:'Rainwater flowing away vs. the start'}</dt><dd>{runoff===null?'No baseline runoff':`${Math.abs(runoff).toFixed(1)}% ${runoff>=0?'less':'more'}`}</dd></div>
-  </dl><p className="fine">Plant loss follows the game’s dry-season rules. Cooling shows how much the project cooled the ground. The community score is part of the game; it does not come from a survey.</p>
+   <div><dt>Total water held in one modeled storm</dt><dd>{effects.retention.toFixed(1)} m³</dd></div>
+   <div><dt>Runoff change from this year’s full plan</dt><dd>{Math.abs(effects.annualRunoffReduction).toFixed(1)} m³ {effects.annualRunoffReduction>=0?'less':'more'}</dd></div>
+  </dl><p className="fine">Water retention is the final village total for one storm. Intermediate project snapshots are not added together.</p><p className="fine">Plant loss follows the game’s dry-season rules. Cooling shows the combined effect of this year’s projects. The community score is part of the game; it does not come from a survey.</p>
  </section>;
 }
 
@@ -46,7 +48,7 @@ export function FiveYearSummary({session}:{session:Session}){
  const b=planningBudget(session);const final=session.history.at(-1);if(!final)return null;
  return <section className="five-year-summary" aria-labelledby="five-year-title"><h3 id="five-year-title">Your five-year plan, in numbers</h3>
   <div className="final-budget"><strong>{b.spent} coins invested · ${(b.spent*rules.budget.usd_per_coin).toLocaleString()}</strong><span>{b.remaining} coins unused · {session.history.length} years completed</span></div>
-  <div className="history-table-wrap"><table><caption>What you spent and how much land had plants each year</caption><thead><tr><th scope="col">Year</th><th scope="col">Project</th><th scope="col">Coins</th><th scope="col">Living cover</th></tr></thead><tbody>{session.history.map(t=><tr key={t.year}><th scope="row">{t.year}</th><td>{turnProjects(t).map(p=>projects[p.policy].name).join(' + ')}</td><td>{t.spend_coins}</td><td>{t.dry_season?.after_project_vegetation_pct.toFixed(1)??'—'}%</td></tr>)}</tbody></table></div>
+  <div className="history-table-wrap"><table><caption>What you spent and how much land had plants each year</caption><thead><tr><th scope="col">Year</th><th scope="col">Project</th><th scope="col">Coins</th><th scope="col">Living cover</th></tr></thead><tbody>{session.history.map(t=><tr key={t.year}><th scope="row">{t.year}</th><td>{turnAllocations(t).map(p=>`${projects[p.policy].name} (${p.quantity} units)`).join(' + ')}</td><td>{t.spend_coins}</td><td>{t.dry_season?.after_project_vegetation_pct.toFixed(1)??'—'}%</td></tr>)}</tbody></table></div>
   <p className="fine">The unused total includes coins you did not spend in earlier years. The game ends after year five. Open your village story below to see each year’s results.</p>
  </section>;
 }

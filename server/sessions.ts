@@ -1,4 +1,4 @@
-import {turnProjects} from '../shared/planning';
+import {turnProjects,yearlyEffects} from '../shared/planning';
 import {resolutionInput,resolutionMetrics,type ResolutionDetails} from '../shared/resolution';
 import {applyDrySeason,livingCover,noProjectCover} from '../shared/dryland';
 import { randomUUID } from 'node:crypto';
@@ -35,7 +35,7 @@ export class SessionStore {
     const generated=await this.gateway.call('resolution','generate_youth_resolution',resolutionInput(s,details)) as {author_name?:string;district_name?:string;biophysical_scorecard?:Record<string,unknown>};
     const score=generated?.biophysical_scorecard;
     if(generated?.author_name!==details.author_name||generated.district_name!==details.district_name||!score||['total_modeled_retention_m3','baseline_runoff_reduction_m3','net_built_up_reduced_ha','ground_depaved_ha','total_ground_interventions_ha','rooftop_treated_ha'].some(k=>typeof score[k]!=='number'||Math.abs(Number(score[k])-metrics[k as keyof typeof metrics])>(k.endsWith("_m3")?.51:.011)))throw new RequestError('The document service returned different numbers. Your game is saved; try again.',502);
-    s.resolution={details,created_at:new Date().toISOString(),metrics,years:s.history.map(t=>({year:t.year,policy:turnProjects(t)[0].policy,policies:turnProjects(t).map(p=>p.policy),coins:t.spend_coins,cooling:t.result.science_payload.invest_urban_cooling.surface_temp_drop_celsius})),rating_change:s.assessment_result.learning_gain.average_normalized_gain};
+    s.resolution={details,created_at:new Date().toISOString(),metrics,years:s.history.map(t=>({year:t.year,policy:turnProjects(t)[0].policy,policies:turnProjects(t).map(p=>p.policy),coins:t.spend_coins,cooling:yearlyEffects(t).cooling})),rating_change:s.assessment_result.learning_gain.average_normalized_gain};
     this.commit(s);return structuredClone(s);
   });}
   async post(id:string, answers:Assessment) {return this.locked(id,async()=>{

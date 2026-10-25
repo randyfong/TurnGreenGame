@@ -37,3 +37,9 @@ export function restoreQuantities(raw:unknown):ProjectQuantities{
  for(const p of rules.interventions){const value=(raw as Record<string,unknown>)[p.id];if(typeof value==='number'&&Number.isInteger(value)&&value>=0)result[p.id as Policy]=Math.min(value,selectionMaximum(result,p.id as Policy));}
  return result;
 }
+
+/** Read combined plan metrics; intermediate steps are cumulative snapshots, never totals to sum. */
+export function yearlyEffects(turn:Turn){
+ const c=turn.result.science_payload.invest_urban_cooling,f=turn.result.science_payload.invest_urban_flood;
+ return {cooling:c.annual_plan_temp_drop_celsius??c.surface_temp_drop_celsius,retention:f.design_storm_total_retained_m3??f.stormwater_retained_m3,annualRunoffReduction:f.annual_plan_incremental_runoff_reduction_m3??f.incremental_runoff_reduction_m3,baselineRunoffReduction:f.cumulative_retained_improvement_m3??(f.baseline_runoff_mm-f.post_runoff_mm)*turn.result.next_state.total_area_hectares*10};
+}
