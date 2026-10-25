@@ -64,7 +64,8 @@ export class SessionStore {
     const dry=s.scenario_version==='dryland-v1'?applyDrySeason(s.engine,s.year,s.history):undefined;
     // Apply the scenario event once above, then submit the complete yearly plan.
     const raw=await this.gateway.call('simulation','simulate_year_plan',{year:s.year,annual_budget_limit:rules.budget.annual_limit_coins*rules.budget.usd_per_coin,current_state:dry?.state??s.engine,projects:normalized.map(c=>({intervention_id:c.policy,budget_allocated:rules.interventions.find(p=>p.id===c.policy)!.unit_cost_coins*c.quantity*rules.budget.usd_per_coin}))}) as {year:number;total_budget_spent:number;projects_executed:NonNullable<Simulation['projects_executed']>;next_state:Simulation['next_state'];science_payload:Simulation['science_payload'];youth_scorecard:{overall_sustainability_score:number}};
-    if(!raw||raw.year!==s.year||raw.total_budget_spent!==usd||!Array.isArray(raw.projects_executed)||raw.projects_executed.length!==normalized.length||normalized.some(c=>{const matches=raw.projects_executed.filter(p=>p.intervention_id===c.policy);return matches.length!==1||matches[0].budget_capped||matches[0].budget_allocated!==rules.interventions.find(p=>p.id===c.policy)!.unit_cost_coins*c.quantity*rules.budget.usd_per_coin||!Number.isFinite(matches[0].area_converted_hectares)||matches[0].area_converted_hectares<0;}))throw new RequestError('The yearly simulation returned inconsistent projects. Nothing was saved.',502);
+    validateYearResponse(raw,s,dry?.state??s.engine,usd);
+    if(!raw||raw.year!==s.year||raw.total_budget_spent!==usd||!Array.isArray(raw.projects_executed)||raw.projects_executed.length!==normalized.length||normalized.some(c=>{const matches=raw.projects_executed.filter(p=>p?.intervention_id===c.policy);return matches.length!==1||matches[0].budget_capped||matches[0].budget_allocated!==rules.interventions.find(p=>p.id===c.policy)!.unit_cost_coins*c.quantity*rules.budget.usd_per_coin||!Number.isFinite(matches[0].area_converted_hectares)||matches[0].area_converted_hectares<0;}))throw new RequestError('The yearly simulation returned inconsistent projects. Nothing was saved.',502);
     const result:Simulation={turn:s.year,intervention:{id:normalized[0].policy,budget_allocated:usd,area_converted_hectares:raw.projects_executed.reduce((n,p)=>n+p.area_converted_hectares,0)},projects_executed:raw.projects_executed,next_state:raw.next_state,science_payload:raw.science_payload,player_metrics:{community_cheer_score:raw.youth_scorecard?.overall_sustainability_score}};
 
     validateSimulation(result,s,usd,normalized[0].policy);
@@ -82,4 +83,29 @@ export function validateSimulation(r:Simulation,s:Session,usd:number,policy:stri
   if(!cover||keys.some(k=>!Number.isFinite(cover[k as keyof typeof cover])||cover[k as keyof typeof cover]<0||cover[k as keyof typeof cover]>100)||Math.abs(Object.values(cover).reduce((a,b)=>a+b,0)-100)>rules.metrics.land_cover_sum_tolerance_pct)fail();
   const c=r.science_payload?.invest_urban_cooling;const f=r.science_payload?.invest_urban_flood;
   if(!c||!f||[c.surface_temp_drop_celsius,f.baseline_runoff_mm,f.post_runoff_mm,f.stormwater_retained_m3,f.incremental_runoff_reduction_m3,r.player_metrics?.community_cheer_score,r.intervention.area_converted_hectares].some(n=>!Number.isFinite(n)))fail();
+}
+
+/** Validate the entire payload before adapting, persisting, or advancing the year. */
+export function validateYearResponse(raw:unknown,session:Session,before:Session['engine'],usd:number){
+ const fail=()=>{throw new RequestError('The yearly simulation returned invalid results. Your plan and funds are preserved; try again.',502);};
+ const object=(v:unknown):v is Record<string,any>=>!!v&&typeof v==='object'&&!Array.isArray(v);
+ const finiteTree=(v:unknown):boolean=>typeof v==='number'?Number.isFinite(v):Array.isArray(v)?v.every(finiteTree):object(v)?Object.values(v).every(finiteTree):true;
+ if(!object(raw)||!finiteTree(raw))return fail();
+ const state=raw.next_state,science=raw.science_payload,score=raw.youth_scorecard;
+ if(raw.year!==session.year||raw.total_budget_spent!==usd||!object(state)||!object(science)||!object(score))return fail();
+ if(!Array.isArray(raw.projects_executed)||!raw.projects_executed.length||raw.projects_executed.some((p:unknown)=>!object(p)))return fail();
+ if(state.remaining_budget!==before.remaining_budget-usd||state.remaining_budget<0||state.total_area_hectares!==before.total_area_hectares)return fail();
+ const validCover=(cover:unknown)=>object(cover)&&Object.keys(cover).length===rules.grid.class_order.length&&rules.grid.class_order.every(k=>typeof cover[k]==='number'&&cover[k]>=0&&cover[k]<=100)&&Math.abs(Object.values(cover).reduce((n,v)=>n+Number(v),0)-100)<=rules.metrics.land_cover_sum_tolerance_pct;
+ if(!validCover(state.land_cover))return fail();
+ if(state.baseline_land_cover!==undefined){if(!validCover(state.baseline_land_cover))return fail();const base=before.baseline_land_cover??before.land_cover;if(rules.grid.class_order.some(k=>Math.abs(state.baseline_land_cover[k]-Number(base[k as keyof typeof base]))>.011))return fail();}
+ if(state.baseline_runoff_mm!==undefined&&(typeof state.baseline_runoff_mm!=='number'||state.baseline_runoff_mm<0))return fail();
+ if(before.baseline_runoff_mm!==undefined&&state.baseline_runoff_mm!==before.baseline_runoff_mm)return fail();
+ if(state.roof_treatment_hectares!==undefined&&(typeof state.roof_treatment_hectares!=='number'||state.roof_treatment_hectares<0||state.roof_treatment_hectares>before.total_area_hectares||state.roof_treatment_hectares+.011<(before.roof_treatment_hectares??0)))return fail();
+ if((before.roof_treatment_hectares??0)>0&&state.roof_treatment_hectares===undefined)return fail();
+ if(typeof score.overall_sustainability_score!=='number'||score.overall_sustainability_score<0||score.overall_sustainability_score>100)return fail();
+ const cooling=science.invest_urban_cooling,flood=science.invest_urban_flood;
+ if(!object(cooling)||!object(flood)||typeof cooling.surface_temp_drop_celsius!=='number')return fail();
+ for(const key of ['baseline_runoff_mm','post_runoff_mm','stormwater_retained_m3'])if(typeof flood[key]!=='number'||flood[key]<0)return fail();
+ if(typeof flood.incremental_runoff_reduction_m3!=='number')return fail();
+ for(const p of raw.projects_executed)if(typeof p.budget_allocated!=='number'||p.budget_allocated<=0||typeof p.area_converted_hectares!=='number'||p.area_converted_hectares<0||p.area_converted_hectares>before.total_area_hectares||p.budget_capped!==undefined&&p.budget_capped!==false)return fail();
 }
