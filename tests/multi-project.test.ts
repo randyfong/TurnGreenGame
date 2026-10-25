@@ -11,3 +11,21 @@ test('mixed year uses yearly tool, one dry season, combined budget and order-ind
 test('empty, duplicate, invalid and over-budget lists never reach simulation',async()=>{const f=fixture(),s=await ready(f);for(const choices of [[],[projects[0],projects[0]],[{policy:'bioswales' as const,quantity:4}],[{policy:'urban_canopy_trees' as const,quantity:4},projects[1]]])await assert.rejects(f.store.turn(s.id,{year:1,request_id:'invalid',projects:choices}));assert.equal(f.calls.length,0);assert.deepEqual(f.store.get(s.id),s);});
 test('mixed simulation failure leaves the entire year unchanged',async()=>{const f=fixture(),s=await ready(f);f.fail();await assert.rejects(f.store.turn(s.id,{year:1,request_id:'failure',projects}));assert.deepEqual(f.store.get(s.id),s);});
 test('mixed badges count only the requested project spend',()=>{const turn={year:1,policy:'bioswales',quantity:1,spend_coins:100,projects} as Turn;assert.equal(missionWon(turn,[turn]),false);turn.projects=[{policy:'urban_canopy_trees',quantity:2},{policy:'bioswales',quantity:1}];assert.equal(missionWon(turn,[turn]),true);});
+test('legacy single-project requests also use the yearly tool and convert coins to dollars',async()=>{
+ const f=fixture(),s=await ready(f);
+ await f.store.turn(s.id,{year:1,request_id:'legacy-yearly',policy:'urban_canopy_trees',quantity:2});
+ assert.equal(f.calls[0].name,'simulate_year_plan');
+ assert.deepEqual(f.calls[0].args.projects,[{intervention_id:'urban_canopy_trees',budget_allocated:500}]);
+ assert.equal(f.calls[0].args.annual_budget_limit,1000);
+ assert.deepEqual(f.calls[0].args.current_state.land_cover,applyDrySeason(s.engine,1).state.land_cover);
+});
+test('later mixed years apply the event once with protection from earlier rain gardens',async()=>{
+ const f=fixture(),s=await ready(f);
+ const first=await f.store.turn(s.id,{year:1,request_id:'rain-gardens',projects:[{policy:'bioswales',quantity:2}]});
+ const expected=applyDrySeason(first.engine,2,first.history);
+ assert.equal(expected.impact.protection_fraction,.1);
+ const second=await f.store.turn(s.id,{year:2,request_id:'protected-mix',projects});
+ assert.deepEqual(f.calls[1].args.current_state.land_cover,expected.state.land_cover);
+ assert.equal(second.history[1].dry_season?.vegetation_lost_ha,expected.impact.vegetation_lost_ha);
+ assert.equal(f.calls.length,2);
+});
