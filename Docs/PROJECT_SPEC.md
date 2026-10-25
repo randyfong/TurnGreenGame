@@ -1,5 +1,7 @@
 # PROJECT_SPEC.md: Youth Climate Resilience Simulation & Civic Action Engine
 
+> Implementation authority: [RECONCILED_SPEC.md](RECONCILED_SPEC.md) governs the first release. The original examples below are retained as design context; conflicting budget, parcel placement, tool payload, metric, assessment, and evidence claims are superseded by the reconciled rules.
+
 ## 1. Project Overview & Core Mission
 A lightweight, web-based micro-simulation game designed for young adults (ages 15–24) to solve urban climate vulnerabilities over a 5-turn planning horizon. The application combines verifiable geospatial science with intuitive, non-technical player feedback, ending in a concrete civic advocacy document ready for local public comment.
 

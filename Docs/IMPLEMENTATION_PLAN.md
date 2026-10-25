@@ -16,6 +16,8 @@ Keep game rules and session history separate from React rendering. The backend v
 
 ## Implementation Steps
 
+**Step 1 executed (October 24, 2026):** All four required tools returned structured results for a sample session. Live revalidation confirms fixes to assessment edge cases and roof persistence. Integration remains conditional on the remaining findings documented in [TOOL_VALIDATION.md](TOOL_VALIDATION.md). Captured live responses and a repeatable fixture check are in `../validation/`.
+
 | Step | Work | Completion check |
 | :--- | :--- | :--- |
 | **1. Validate the existing tools** | Exercise simulation, science, assessment, and resolution generation with a sample session. Capture actual response shapes and errors. | All four tools return usable structured results. |
@@ -24,28 +26,31 @@ Keep game rules and session history separate from React rendering. The backend v
 | **4. Implement the planning loop** | Build the 4×4 grid, intervention palette, budget display, five-year progression, and annual result summaries. | A player can complete five turns without overspending or submitting twice. |
 | **5. Add explanations and feedback** | Translate technical outputs into plain language. Add the science drawer, citations, and lightweight parcel transitions. | Each displayed environmental change has a traceable explanation. |
 | **6. Add assessments and recovery** | Record identical pre/post questions. Save session state locally and restore it on refresh. | Assessment results and game progress survive refreshes and recoverable failures. |
-| **7. Generate the civic resolution** | Pass actual session history to the resolution tool. Add author/district fields, preview, and single-page print styling. | The completed game produces a readable one-page resolution through Print / Save as PDF. |
+| **7. Generate the civic resolution** | Pass actual session history to the resolution tool. Add author/district fields, a controlled resolution template, validated metric overrides, and single-page print styling. | The completed game produces a readable one-page resolution through Print / Save as PDF. |
 | **8. Playtest and optimize** | Verify both neighborhoods, mobile touch, keyboard navigation, error recovery, performance, and print layout. | Both complete journeys work on desktop and a narrow mobile screen. |
 
-## Specification Differences to Resolve First
+## Reconciled Specification (Step 2 Complete)
 
-The documents and current tool contracts differ in ways that affect implementation. These are recommended decisions to confirm during implementation, rather than completed changes.
+[RECONCILED_SPEC.md](RECONCILED_SPEC.md) is the implementation authority for the first release. Constants are captured in `../config/game-rules.json`. It supersedes conflicting examples in the original design and project specification.
 
-| Issue | Recommended decision |
+| Topic | Adopted rule |
 | :--- | :--- |
-| Design grants **100 coins yearly**; spec describes a **fixed five-year pool**. | Use a 500-coin total with 100 released each year. Define whether unused coins carry forward. |
-| UI costs use coins; simulation accepts **USD**. | Define an explicit coin-to-dollar conversion after checking the tool's cost model. |
-| Design allows several placements per year; simulation accepts **one intervention per call** and no parcel coordinates. | Validate whether calls can be composed within a year. Keep placements pending, calculate the result, and commit the year atomically. |
-| Tool state uses land-cover percentages, while the UI uses parcels. | Define parcel area and a consistent conversion between grid changes and aggregate land cover. |
-| Documents label WorldCover class 20 as grassland. | Align with the tool schema: **20 = shrubland, 30 = grassland**. |
-| Design calls runoff reduction “flood risk” or water-depth reduction. | Display what the tool actually calculates; do not equate runoff retention with measured flood depth. |
-| Assessment wording differs between documents. | Use the tool-compatible questions unchanged before and after play. Describe the result as a change in understanding ratings. |
+| Budget | 500 total coins; maximum 100 per year; unused annual allowance does not carry forward. |
+| Units | 1 coin = $1,000 modeled USD. Tree/rain-garden/roof investment units cost 25/30/15 coins. Units are budget increments, not exact parcels. |
+| Annual action | One intervention type per year; multiple whole investment units in a single simulation call. |
+| Grid | 4×4 schematic, mixed land-cover overview; squares open explanations. The aggregate engine does not support spatial targeting. |
+| Land cover | Class 20 is shrubland, class 30 grassland. Two synthetic 50-ha neighborhood profiles are defined. |
+| Metrics | Annual surface cooling, baseline-relative runoff reduction, community game score, and distinct net ground/roof areas. No unsupported cumulative cooling total. |
+| Assessment | Identical tool-compatible questions before/after play; rating change rather than objective mastery. |
+| Resolution | Explicit water/land overrides and a controlled print template; omit unsupported generated claims. |
+
+Step 3 must validate unit-sized allocations and the new riverside profile before enabling these controls. Existing server continuity findings remain documented in [TOOL_VALIDATION.md](TOOL_VALIDATION.md).
 
 ## Gameplay and Interface
 
 The player's loop is:
 
-**Review neighborhood → select an intervention → choose eligible parcels → review spending → end the year → inspect results.**
+**Review neighborhood → select an intervention → choose investment units → review spending → end the year → inspect results and grid.**
 
 Use large, labeled grid buttons; a compact HUD for heat, rainwater, budget, and community score; and a science drawer that keeps technical details optional. Use small bundled SVG illustrations and CSS transitions to support the asset budget and low-bandwidth requirement.
 

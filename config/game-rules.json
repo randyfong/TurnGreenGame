@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "specification": "Docs/RECONCILED_SPEC.md",
+  "years": 5,
+  "budget": {
+    "total_coins": 500,
+    "annual_limit_coins": 100,
+    "usd_per_coin": 1000,
+    "carry_forward": false,
+    "policies_per_year": 1,
+    "minimum_units": 1
+  },
+  "grid": {
+    "rows": 4,
+    "columns": 4,
+    "mode": "schematic_mixed_land_cover",
+    "interaction": "inspect",
+    "spatial_targeting": false,
+    "class_order": ["tree_cover_10", "shrubland_20", "grassland_30", "cropland_40", "built_up_50", "bare_soil_60", "water_80"]
+  },
+  "interventions": [
+    {"id": "urban_canopy_trees", "label": "Plant shady trees", "unit_cost_coins": 25, "max_units_per_year": 4, "science_topic": "urban_canopy_trees"},
+    {"id": "bioswales", "label": "Build rain gardens", "unit_cost_coins": 30, "max_units_per_year": 3, "science_topic": "bioswales"},
+    {"id": "cool_roofs", "label": "Paint cool roofs", "unit_cost_coins": 15, "max_units_per_year": 6, "science_topic": "cool_roofs"}
+  ],
+  "profiles": [
+    {
+      "id": "crowded_market",
+      "label": "Crowded Market District",
+      "synthetic": true,
+      "total_area_hectares": 50,
+      "land_cover": {"tree_cover_10": 10, "shrubland_20": 0, "grassland_30": 10, "cropland_40": 0, "built_up_50": 75, "bare_soil_60": 5, "water_80": 0}
+    },
+    {
+      "id": "riverside_valley",
+      "label": "Riverside Valley Town",
+      "synthetic": true,
+      "total_area_hectares": 50,
+      "land_cover": {"tree_cover_10": 10, "shrubland_20": 5, "grassland_30": 15, "cropland_40": 0, "built_up_50": 50, "bare_soil_60": 10, "water_80": 10}
+    }
+  ],
+  "assessment": {
+    "minimum": 1,
+    "maximum": 5,
+    "minimum_label": "Minimal impact",
+    "maximum_label": "Decisive impact",
+    "require_explicit_answers": true,
+    "questions": [
+      {"id": "q1_canopy_flooding", "text": "How much impact does neighborhood tree canopy have on local street flooding?"},
+      {"id": "q2_pavement_heat", "text": "How much impact does asphalt pavement have on neighborhood heatwaves?"}
+    ]
+  },
+  "metrics": {
+    "cooling_display": "annual_only",
+    "storm_depth_mm": 50,
+    "runoff_display": "baseline_relative",
+    "community_score_label": "Community game score",
+    "land_cover_sum_tolerance_pct": 0.05
+  },
+  "export": {
+    "format": "browser_print_pdf",
+    "page_count_target": 1,
+    "rendering": "controlled_application_template",
+    "disclaimer": "Results from a simplified educational simulation; local conditions and implementation may differ."
+  }
+}

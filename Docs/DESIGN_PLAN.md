@@ -1,4 +1,6 @@
 # CoolTown: Youth Climate Resilience Simulation & Civic Action Engine
+
+> Implementation authority: [RECONCILED_SPEC.md](RECONCILED_SPEC.md) governs the first release. The original examples below are retained as design context; conflicting budget, parcel placement, tool payload, metric, assessment, and evidence claims are superseded by the reconciled rules.
 ### Comprehensive Product Specification, Plain-Language Engine & Implementation Blueprint
 
 ---
