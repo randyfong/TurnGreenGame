@@ -78,3 +78,7 @@ Tap land figures, a map plot, **Why?**, or an annual-result label for the scienc
 Progress and assessment results now survive server restarts through versioned local files in `data/sessions/` (git-ignored). Set `COOLVILLAGE_SAVE_DIR` to change that location. Browser storage preserves the session pointer and unfinished selections/answers. Keep both browser storage and the server save directory to resume automatically. Old memory-only sessions cannot be restored retroactively. Run one local server per save directory. See [assessment and recovery notes](Docs/ASSESSMENTS_RECOVERY.md).
 
 Live recovery check: `node --import tsx scripts/validate-recovery.ts`.
+
+## Village action plan
+
+After five years, save the final reflection answers, then enter a name or nickname and village/district to create a civic resolution. Use **Print / Save as PDF** to print only the action plan. Optional school/group details are omitted when blank. The plan is stored with the session. See [resolution notes and print verification limits](Docs/CIVIC_RESOLUTION.md).

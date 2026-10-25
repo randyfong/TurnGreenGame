@@ -28,6 +28,8 @@ Keep game rules and session history separate from React rendering. The backend v
 
 **Step 6 complete (October 24, 2026):** Identical before/after ratings, validated assessment results, durable local session snapshots, browser drafts, reconnect controls, and idempotent recovery are implemented. Build, 25 automated tests, real-service restart recovery, and a full browser journey pass. See [ASSESSMENTS_RECOVERY.md](ASSESSMENTS_RECOVERY.md).
 
+**Step 7 implemented (October 24, 2026):** Added saved author/district/group details, real-history resolution generation, metric validation, a controlled plain-language action plan, source links, and Print / Save as PDF styling. Build and 27 tests pass; the real generator and browser document were checked. Native print access is blocked, so final PDF page-count verification remains open. See [CIVIC_RESOLUTION.md](CIVIC_RESOLUTION.md).
+
 | Step | Work | Completion check |
 | :--- | :--- | :--- |
 | **1. Validate the existing tools** | Exercise simulation, science, assessment, and resolution generation with a sample session. Capture actual response shapes and errors. | All four tools return usable structured results. |
@@ -36,7 +38,7 @@ Keep game rules and session history separate from React rendering. The backend v
 | **4. Implement the planning loop — complete** | Build the 4×4 grid, intervention palette, budget display, five-year progression, and annual result summaries. | A player can complete five turns without overspending or submitting twice. |
 | **5. Add explanations and feedback — complete** | Translate technical outputs into plain language. Add the science drawer, citations, and lightweight parcel transitions. | Each displayed environmental change has a traceable explanation. |
 | **6. Add assessments and recovery — complete** | Record identical pre/post questions. Save session state locally and restore it on refresh. | Assessment results and game progress survive refreshes and recoverable failures. |
-| **7. Generate the civic resolution** | Pass actual session history to the resolution tool. Add author/district fields, a controlled resolution template, validated metric overrides, and single-page print styling. | The completed game produces a readable one-page resolution through Print / Save as PDF. |
+| **7. Generate the civic resolution — implemented; print QA pending** | Pass actual session history to the resolution tool. Add author/district fields, a controlled resolution template, validated metric overrides, and single-page print styling. | The completed game produces a readable one-page resolution through Print / Save as PDF. |
 | **8. Playtest and optimize** | Verify both neighborhoods, mobile touch, keyboard navigation, error recovery, performance, and print layout. | Both complete journeys work on desktop and a narrow mobile screen. |
 
 ## Reconciled Specification (Step 2 Complete)

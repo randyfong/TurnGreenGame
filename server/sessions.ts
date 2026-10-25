@@ -1,3 +1,4 @@
+import {resolutionInput,resolutionMetrics,type ResolutionDetails} from '../shared/resolution';
 import {applyDrySeason,livingCover,noProjectCover} from '../shared/dryland';
 import { randomUUID } from 'node:crypto';
 import { rules, type AssessmentResult, type Assessment, type Session, type Simulation, type ToolGateway, type TurnInput } from '../shared/types';
@@ -22,6 +23,20 @@ export class SessionStore {
     await this.gateway.call('assessment','record_assessment_score',{session_id:id,turn:0,responses:answers});
     s.baseline=answers;s.phase='planning';this.commit(s);return structuredClone(s);
   }); }
+  async resolution(id:string, raw:ResolutionDetails){return this.locked(id,async()=>{
+    const s=this.get(id);if(s.phase!=='complete'||s.history.length!==5||!s.post_assessment||!s.assessment_result)throw new RequestError('Finish all five years and save your final answers first.',409);
+    const text=(value:unknown,required:boolean)=>{if(typeof value!=='string'||value.trim().length>(required?80:100)||(/[\x00-\x1f]/.test(value))||(required&&!value.trim()))throw new RequestError('Enter a short name and district (up to 80 characters).');return value.trim();};
+    if(!raw)throw new RequestError('Enter a name and district.');
+    const details:ResolutionDetails={author_name:text(raw.author_name,true),district_name:text(raw.district_name,true)};
+    if(raw.organization_or_school)details.organization_or_school=text(raw.organization_or_school,false);
+    if(s.resolution&&JSON.stringify(s.resolution.details)===JSON.stringify(details))return s;
+    const metrics=resolutionMetrics(s);if(Object.values(metrics).some(v=>!Number.isFinite(v)))throw new RequestError('Saved results contain invalid numbers. Your game is preserved.',409);
+    const generated=await this.gateway.call('resolution','generate_youth_resolution',resolutionInput(s,details)) as {author_name?:string;district_name?:string;biophysical_scorecard?:Record<string,unknown>};
+    const score=generated?.biophysical_scorecard;
+    if(generated?.author_name!==details.author_name||generated.district_name!==details.district_name||!score||['total_modeled_retention_m3','baseline_runoff_reduction_m3','net_built_up_reduced_ha','ground_depaved_ha','total_ground_interventions_ha','rooftop_treated_ha'].some(k=>typeof score[k]!=='number'||Math.abs(Number(score[k])-metrics[k as keyof typeof metrics])>(k.endsWith("_m3")?.51:.011)))throw new RequestError('The document service returned different numbers. Your game is saved; try again.',502);
+    s.resolution={details,created_at:new Date().toISOString(),metrics,years:s.history.map(t=>({year:t.year,policy:t.policy,coins:t.spend_coins,cooling:t.result.science_payload.invest_urban_cooling.surface_temp_drop_celsius})),rating_change:s.assessment_result.learning_gain.average_normalized_gain};
+    this.commit(s);return structuredClone(s);
+  });}
   async post(id:string, answers:Assessment) {return this.locked(id,async()=>{
     const s=this.get(id);
     if(!answers||[answers.q1_canopy_flooding,answers.q2_pavement_heat].some(v=>!Number.isInteger(v)||v<1||v>5))throw new RequestError('Answer both questions with a rating from 1 to 5.');
